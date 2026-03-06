@@ -659,7 +659,7 @@ def run_scan():
         return
 
     log("Tarama başladı.")
-    events = fetch_forex_news()
+    events = fetch_economic_calendar()
     candidates = []
 
     for symbol in SYMBOLS:
@@ -716,6 +716,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
