@@ -4,7 +4,6 @@ import math
 import traceback
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
-import feedparser
 
 import requests
 
@@ -716,6 +715,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
