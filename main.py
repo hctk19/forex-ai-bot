@@ -65,9 +65,6 @@ def validate_env():
         missing.append("TG_CHAT_ID")
     if not TWELVE_KEY:
         missing.append("TWELVE_KEY")
-    if not FMP_API_KEY:
-        missing.append("FMP_API_KEY")
-
     if missing:
         raise RuntimeError(f"Eksik environment değişkenleri: {', '.join(missing)}")
 
@@ -664,3 +661,4 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
