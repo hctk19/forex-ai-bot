@@ -662,25 +662,29 @@ def run_scan():
     events = fetch_forex_news()
     candidates = []
 
-    for symbol in SYMBOLS:
-        try:
-            if signals_sent_today >= MAX_SIGNALS_PER_DAY:
-                break
+  for symbol in SYMBOLS:
+    try:
+        if signals_sent_today >= MAX_SIGNALS_PER_DAY:
+            break
 
-            if not cooldown_ok(symbol):
-                log(f"{symbol} cooldown aktif, geçildi.")
-                continue
+        if not cooldown_ok(symbol):
+            log(f"{symbol} cooldown aktif, geçildi.")
+            continue
 
-           blocked, reason = news_block_for_symbol(symbol, events)
+        blocked, reason = news_block_for_symbol(symbol, events)
         if blocked:
             log(reason)
+            continue
 
-            signal, info = analyze_symbol(symbol)
-            log(info)
-            time.sleep(8)
-            
-            if signal:
-                candidates.append(signal)
+        signal, info = analyze_symbol(symbol)
+        log(info)
+        time.sleep(8)
+
+        if signal:
+            candidates.append(signal)
+
+    except Exception as e:
+        log(f"{symbol} hata: {e}")
 
         except Exception as e:
             log(f"{symbol} analiz hatası: {e}")
@@ -715,6 +719,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
