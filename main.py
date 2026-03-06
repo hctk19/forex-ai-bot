@@ -614,6 +614,41 @@ def build_message(signal: dict):
 # =========================
 # MAIN SCAN
 # =========================
+
+def fetch_forex_news():
+    try:
+        url = "https://api.tradingeconomics.com/calendar?c=guest:guest&f=json"
+        r = requests.get(url, timeout=20)
+
+        if r.status_code != 200:
+            log(f"Haber API hata: {r.status_code}")
+            return []
+
+        data = r.json()
+        events = []
+
+        for event in data:
+            title = str(event.get("Event", "")).lower()
+
+            if any(word in title for word in [
+                "interest rate",
+                "cpi",
+                "inflation",
+                "non farm",
+                "fomc",
+                "fed",
+                "powell"
+            ]):
+                events.append({
+                    "title": event.get("Event"),
+                    "time": event.get("Date")
+                })
+
+        return events
+
+    except Exception as e:
+        log(f"Haber alınamadı: {e}")
+        return []
 def run_scan():
     global signals_sent_today
 
@@ -680,6 +715,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
