@@ -636,10 +636,9 @@ def run_scan():
                 log(f"{symbol} cooldown aktif, geçildi.")
                 continue
 
-            blocked, reason = news_block_for_symbol(symbol, events)
-            if blocked:
-                log(reason)
-                continue
+           blocked, reason = news_block_for_symbol(symbol, events)
+        if blocked:
+            log(reason)
 
             signal, info = analyze_symbol(symbol)
             log(info)
@@ -681,6 +680,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
