@@ -642,7 +642,8 @@ def run_scan():
 
             signal, info = analyze_symbol(symbol)
             log(info)
-
+            time.sleep(8)
+            
             if signal:
                 candidates.append(signal)
 
@@ -679,5 +680,6 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
