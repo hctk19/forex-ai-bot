@@ -292,8 +292,11 @@ COUNTRY_TO_CCY = {
     "new zealand": "NZD",
 }
 
-
 def fetch_economic_calendar():
+    if not FMP_API_KEY:
+        log("FMP_API_KEY yok, haber filtresi kapalı.")
+        return []
+
     today = datetime.now(UTC_TZ).date()
     start_date = today.isoformat()
     end_date = (today + timedelta(days=1)).isoformat()
@@ -305,10 +308,25 @@ def fetch_economic_calendar():
         "apikey": FMP_API_KEY
     }
 
-    r = requests.get(url, params=params, timeout=20)
-    r.raise_for_status()
-    data = r.json()
-    return data if isinstance(data, list) else []
+    try:
+        r = requests.get(url, params=params, timeout=20)
+
+        if r.status_code == 402:
+            log("FMP planı economic-calendar için yetkisiz. Haber filtresi devre dışı.")
+            return []
+
+        r.raise_for_status()
+        data = r.json()
+
+        if isinstance(data, list):
+            return data
+
+        log("FMP beklenmeyen veri döndürdü.")
+        return []
+
+    except Exception as e:
+        log(f"Haber verisi alınamadı: {e}")
+        return []
 
 
 def symbol_currencies(symbol: str):
@@ -661,4 +679,5 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
