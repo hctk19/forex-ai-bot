@@ -613,8 +613,8 @@ def analyze_symbol(symbol: str):
     if current_range > atr_val * 2.5:
         return None, f"{symbol} news spike volatility"
 # candle range kontrolü
-last_range = candles[-1]["high"] - candles[-1]["low"]
-prev_range = candles[-2]["high"] - candles[-2]["low"]
+    last_range = candles[-1]["high"] - candles[-1]["low"]
+    prev_range = candles[-2]["high"] - candles[-2]["low"]
 
 # Liquidity Sweep
 prev_high = candles[-2]["high"]
@@ -965,6 +965,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
