@@ -101,32 +101,50 @@ def cooldown_ok(symbol: str):
 # MARKET DATA
 # =========================
 def fetch_ohlc(symbol: str, interval="15min", outputsize=120):
-    url = "https://api.twelvedata.com/time_series"
-    params = {
-        "symbol": symbol,
-        "interval": interval,
-        "outputsize": outputsize,
-        "apikey": TWELVE_KEY,
-        "format": "JSON"
-    }
 
-    r = requests.get(url, params=params, timeout=20)
-    data = r.json()
+    try:
 
-    if "values" not in data:
-        raise ValueError(f"{symbol} veri alınamadı: {data}")
+        symbol_map = {
+            "XAU/USD": "GC=F",
+            "XAG/USD": "SI=F",
+            "BTC/USD": "BTC-USD",
+            "ETH/USD": "ETH-USD",
+            "SPX": "^GSPC",
+            "NAS100": "^NDX",
+            "US30": "^DJI",
+            "GER40": "^GDAXI",
+            "UK100": "^FTSE",
+            "USOIL": "CL=F",
+            "UKOIL": "BZ=F",
+            "NATGAS": "NG=F"
+        }
 
-    values = list(reversed(data["values"]))  # eski -> yeni
+        yf_symbol = symbol_map.get(symbol, symbol.replace("/", "") + "=X")
 
-    candles = []
-    for v in values:
-        candles.append({
-            "datetime": v["datetime"],
-            "open": float(v["open"]),
-            "high": float(v["high"]),
-            "low": float(v["low"]),
-            "close": float(v["close"]),
-        })
+        data = yf.download(
+            yf_symbol,
+            interval="15m",
+            period="5d",
+            progress=False
+        )
+
+        candles = []
+
+        for index, row in data.iterrows():
+
+            candles.append({
+                "datetime": str(index),
+                "open": float(row["Open"]),
+                "high": float(row["High"]),
+                "low": float(row["Low"]),
+                "close": float(row["Close"])
+            })
+
+        return candles
+
+    except Exception as e:
+        log(f"{symbol} veri alınamadı: {e}")
+        return []
     return candles
 
 
@@ -731,6 +749,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
