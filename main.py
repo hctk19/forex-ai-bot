@@ -586,6 +586,13 @@ def analyze_symbol(symbol: str):
 
     if None in [rsi_val, lower, mid, upper, ema20, ema50, macd_line, signal_line, histogram, atr_val]:
         return None, f"{symbol} veri yetersiz"
+
+def analyze_symbol(symbol: str):
+
+    candles = fetch_ohlc(symbol)
+
+    if not candles or len(candles) < 50:
+        return None, f"{symbol} veri yetersiz"
 # spread filtresi
 spread = candles[-1]["high"] - candles[-1]["low"]
 
@@ -635,7 +642,7 @@ squeeze = atr_squeeze(candles, atr_val)
 
 # ================= LONG =================
 
-    if rsi_val <= 32:
+if rsi_val <= 32:
         score_long += 18
         reasons_long.append("RSI güçlü dip")
     elif rsi_val <= 36:
@@ -939,6 +946,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
