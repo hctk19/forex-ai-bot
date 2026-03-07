@@ -248,7 +248,19 @@ def atr(candles, period=14):
         return None
 
     return sum(trs[-period:]) / period
+def trend_direction(closes):
+    ema50 = ema(closes, 50)
+    ema200 = ema(closes, 200)
 
+    if ema50 is None or ema200 is None:
+        return "NEUTRAL"
+
+    if ema50 > ema200:
+        return "UP"
+    elif ema50 < ema200:
+        return "DOWN"
+    else:
+        return "NEUTRAL"
 
 # =========================
 # PRICE ACTION FILTERS
@@ -749,6 +761,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
