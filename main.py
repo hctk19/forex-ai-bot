@@ -608,7 +608,7 @@ if last_range < atr_val * 0.25:
         score_long += 18
         reasons_long.append("Likidite sweep long")
 
-    if displacement_bullish(candles):
+if displacement_bullish(candles):
     score_long += 16
     reasons_long.append("Bullish displacement")
 
@@ -843,6 +843,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
