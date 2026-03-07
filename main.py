@@ -325,7 +325,39 @@ def displacement_bearish(candles):
     body = abs(candles[-1]["close"] - candles[-1]["open"])
     rng = candles[-1]["high"] - candles[-1]["low"]
     return rng > 0 and (body / rng) >= 0.65 and candles[-1]["close"] < candles[-1]["open"]
+# =========================
+# SMART MONEY FILTERS
+# =========================
+def false_breakout_bullish(candles):
+    if len(candles) < 3:
+        return False
 
+    prev_high = candles[-2]["high"]
+    last_high = candles[-1]["high"]
+    last_close = candles[-1]["close"]
+
+    return last_high > prev_high and last_close < prev_high
+
+
+def false_breakout_bearish(candles):
+    if len(candles) < 3:
+        return False
+
+    prev_low = candles[-2]["low"]
+    last_low = candles[-1]["low"]
+    last_close = candles[-1]["close"]
+
+    return last_low < prev_low and last_close > prev_low
+
+
+def volatility_expansion(candles, atr_val):
+    if len(candles) < 2:
+        return False
+
+    last_range = candles[-1]["high"] - candles[-1]["low"]
+    prev_range = candles[-2]["high"] - candles[-2]["low"]
+
+    return last_range > prev_range * 1.5 and last_range > atr_val * 0.8
 
 # =========================
 # NEWS FILTER
@@ -842,6 +874,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
