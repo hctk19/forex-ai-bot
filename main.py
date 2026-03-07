@@ -523,6 +523,11 @@ def analyze_symbol(symbol: str):
     macd_line, signal_line, histogram = macd(closes)
     atr_val = atr(candles, 14)
 last_range = candles[-1]["high"] - candles[-1]["low"]
+prev_range = candles[-2]["high"] - candles[-2]["low"]
+
+# son iki mum da küçükse setup iptal
+if last_range < atr_val * 0.25 and prev_range < atr_val * 0.25:
+    return None, f"{symbol} volatilite düşük (mumlar küçük)"
 
 # mum çok küçükse işlem arama
 if last_range < atr_val * 0.25:
@@ -812,6 +817,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
