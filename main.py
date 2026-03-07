@@ -652,14 +652,15 @@ elif rsi_val <= 36:
 
 if price <= lower * 1.003:
     score_long += 12
+
 elif bb_pos <= 0.20:
-        score_long += 8
-        reasons_long.append("Band altına yakın")
+    score_long += 8
+    reasons_long.append("Band altına yakın")
 
-    if ema20 > ema50:
-        score_long += 8
-        reasons_long.append("EMA trend yukarı")
-
+if ema20 > ema50:
+    score_long += 8
+    reasons_long.append("EMA trend yukarı")
+    
     if histogram is not None and histogram > 0:
         score_long += 6
         reasons_long.append("MACD pozitif")
@@ -962,6 +963,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
