@@ -378,6 +378,15 @@ def volatility_expansion(candles, atr_val):
 
     return last_range > prev_range * 1.5 and last_range > atr_val * 0.8
 
+def atr_squeeze(candles, atr_val):
+
+    if len(candles) < 10:
+        return False
+
+    recent_ranges = [(c["high"] - c["low"]) for c in candles[-8:-2]]
+    avg_range = sum(recent_ranges) / len(recent_ranges)
+
+    return avg_range < atr_val * 0.6
 # =========================
 # NEWS FILTER
 # =========================
@@ -617,6 +626,7 @@ def analyze_symbol(symbol: str):
     atr_ratio = atr_val / price if price != 0 else 0
 
     pd_zone = premium_discount_zone(candles)
+    squeeze = atr_squeeze(candles, atr_val)
     # ================= LONG =================
 
     if rsi_val <= 32:
@@ -664,7 +674,9 @@ def analyze_symbol(symbol: str):
     if volatility_expansion(candles, atr_val):
         score_long += 8
         reasons_long.append("Volatilite patlaması")
-
+    if squeeze:
+        score_long += 6
+        reasons_long.append("ATR squeeze breakout")
     if displacement_bullish(candles):
         score_long += 16
         reasons_long.append("Bullish displacement")
@@ -724,6 +736,10 @@ def analyze_symbol(symbol: str):
         score_short += 8
         reasons_short.append("Volatilite patlaması")
 
+    if squeeze:
+        score_short += 6
+        reasons_short.append("ATR squeeze breakout")    
+        
     if displacement_bearish(candles):
         score_short += 16
         reasons_short.append("Bearish displacement")
@@ -917,6 +933,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
