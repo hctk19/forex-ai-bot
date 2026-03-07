@@ -572,12 +572,6 @@ def news_block_for_symbol(symbol: str, events: list):
 # =========================
 # ANALYSIS
 # =========================
-def analyze_symbol(symbol: str):
-
-    candles = fetch_ohlc(symbol)
-
-    if not candles or len(candles) < 50:
-        return None, f"{symbol} veri yetersiz"
 
     candles_1h = fetch_ohlc_tf(symbol, "1h")
 
@@ -642,9 +636,7 @@ reasons_long = []
 reasons_short = []
 
 # TREND REGIME FILTER
-if adx_val is not None and adx_val < 18:
-    score_long -= 8
-    score_short -= 8
+
 
 bb_range = (upper - lower)
 bb_pos = (price - lower) / bb_range if bb_range != 0 else 0.5
@@ -656,11 +648,12 @@ squeeze = atr_squeeze(candles, atr_val)
 # ================= LONG =================
 
 if rsi_val <= 32:
-        score_long += 18
-        reasons_long.append("RSI güçlü dip")
-    elif rsi_val <= 36:
-        score_long += 12
-        reasons_long.append("RSI dip bölgesi")
+    score_long += 18
+    reasons_long.append("RSI güçlü dip")
+
+elif rsi_val <= 36:
+    score_long += 12
+    reasons_long.append("RSI dip bölgesi")
 
     if price <= lower * 1.003:
         score_long += 12
@@ -974,6 +967,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
