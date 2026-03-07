@@ -689,25 +689,25 @@ def analyze_symbol(symbol: str):
         score_short += 4
         reasons_short.append("Son mum zayıf")
 
-if liquidity_sweep_short(candles):
-    score_short += 18
-    reasons_short.append("Likidite sweep short")
+    if liquidity_sweep_short(candles):
+        score_short += 18
+        reasons_short.append("Likidite sweep short")
 
-if false_breakout_bullish(candles):
-    score_short += 10
-    reasons_short.append("Fake breakout yukarı")
+    if false_breakout_bullish(candles):
+        score_short += 10
+        reasons_short.append("Fake breakout yukarı")
 
-if volatility_expansion(candles, atr_val):
-    score_short += 8
-    reasons_short.append("Volatilite patlaması")
+    if volatility_expansion(candles, atr_val):
+        score_short += 8
+        reasons_short.append("Volatilite patlaması")
 
-if displacement_bearish(candles):
-    score_short += 16
-    reasons_short.append("Bearish displacement")
+    if displacement_bearish(candles):
+        score_short += 16
+        reasons_short.append("Bearish displacement")
 
-if trend_1h == "DOWN":
-    score_short += 10
-    reasons_short.append("1H trend aşağı")
+    if trend_1h == "DOWN":
+        score_short += 10
+        reasons_short.append("1H trend aşağı")
 
     direction = None
     score = 0
@@ -890,6 +890,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
