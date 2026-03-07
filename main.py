@@ -650,7 +650,7 @@ if trend_1h == "UP":
         score_short += 18
         reasons_short.append("Likidite sweep short")
 
-    if displacement_bearish(candles):
+if displacement_bearish(candles):
     score_short += 16
     reasons_short.append("Bearish displacement")
 
@@ -839,6 +839,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
