@@ -523,6 +523,10 @@ ema50 = ema(closes, 50)
 macd_line, signal_line, histogram = macd(closes)
 
 atr_val = atr(candles, 14)
+# displacement (güçlü hareket) kontrolü
+current_range = candles[-1]["high"] - candles[-1]["low"]
+
+strong_move = current_range > atr_val * 0.8
 
 # candle range kontrolü
 last_range = candles[-1]["high"] - candles[-1]["low"]
@@ -837,6 +841,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
