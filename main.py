@@ -609,7 +609,7 @@ def analyze_symbol(symbol: str):
 
     if current_range > atr_val * 2.5:
         return None, f"{symbol} news spike volatility"
-# candle range kontrolü
+    # candle range kontrolü
     last_range = candles[-1]["high"] - candles[-1]["low"]
     prev_range = candles[-2]["high"] - candles[-2]["low"]
 
@@ -621,15 +621,15 @@ def analyze_symbol(symbol: str):
     last_low = candles[-1]["low"]
     last_close = candles[-1]["close"]
 
+    # düşük volatilite filtresi
+    if last_range < atr_val * 0.25 and prev_range < atr_val * 0.25:
+        return None, f"{symbol} volatilite düşük"
 
-if last_range < atr_val * 0.25 and prev_range < atr_val * 0.25:
-    return None, f"{symbol} volatilite düşük"
+    score_long = 0
+    score_short = 0
 
-score_long = 0
-score_short = 0
-
-reasons_long = []
-reasons_short = []
+    reasons_long = []
+    reasons_short = []
 
 # TREND REGIME FILTER
 
@@ -985,6 +985,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
