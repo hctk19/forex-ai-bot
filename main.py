@@ -569,10 +569,7 @@ def news_block_for_symbol(symbol: str, events: list):
     return False, None
 
 def analyze_symbol(symbol: str):
-    candles = fetch_ohlc(symbol)
 
-if not candles or len(candles) < 50:
-    return None, f"{symbol} veri yetersiz"
 
 closes = [c["close"] for c in candles]
 last = candles[-1]
@@ -970,6 +967,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
