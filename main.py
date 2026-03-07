@@ -629,7 +629,7 @@ reasons_long = []
 reasons_short = []
 
 # TREND REGIME FILTER
-if adx < 18:
+if adx_val is not None and adx_val < 18:
     score_long -= 8
     score_short -= 8
 
@@ -946,6 +946,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
