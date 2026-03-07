@@ -516,7 +516,7 @@ def analyze_symbol(symbol: str):
     last = candles[-1]
     price = last["close"]
 
-    rsi_val = rsi(closes, 14)
+rsi_val = rsi(closes, 14)
 lower, mid, upper = bollinger_bands(closes, 20, 2)
 ema20 = ema(closes, 20)
 ema50 = ema(closes, 50)
@@ -848,6 +848,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
