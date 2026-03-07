@@ -586,48 +586,53 @@ def analyze_symbol(symbol: str):
 
     if None in [rsi_val, lower, mid, upper, ema20, ema50, macd_line, signal_line, histogram, atr_val]:
         return None, f"{symbol} veri yetersiz"
+# spread filtresi
+spread = candles[-1]["high"] - candles[-1]["low"]
 
-    # spread filtresi
-    spread = candles[-1]["high"] - candles[-1]["low"]
+if spread > atr_val * 2:
+    return None, f"{symbol} spread çok yüksek"
 
-    if spread > atr_val * 2:
-        return None, f"{symbol} spread çok yüksek"
+# displacement kontrolü
+current_range = candles[-1]["high"] - candles[-1]["low"]
+strong_move = current_range > atr_val * 0.8
 
-    # displacement kontrolü
-    current_range = candles[-1]["high"] - candles[-1]["low"]
-    strong_move = current_range > atr_val * 0.8
+# candle range kontrolü
+last_range = candles[-1]["high"] - candles[-1]["low"]
+prev_range = candles[-2]["high"] - candles[-2]["low"]
 
-    # candle range kontrolü
-    last_range = candles[-1]["high"] - candles[-1]["low"]
-    prev_range = candles[-2]["high"] - candles[-2]["low"]
+# Liquidity Sweep
+prev_high = candles[-2]["high"]
+prev_low = candles[-2]["low"]
 
-    # Liquidity Sweep
-    prev_high = candles[-2]["high"]
-    prev_low = candles[-2]["low"]
+last_high = candles[-1]["high"]
+last_low = candles[-1]["low"]
+last_close = candles[-1]["close"]
 
-    last_high = candles[-1]["high"]
-    last_low = candles[-1]["low"]
-    last_close = candles[-1]["close"]
+liquidity_sweep_high = last_high > prev_high and last_close < prev_high
+liquidity_sweep_low = last_low < prev_low and last_close > prev_low
 
-    liquidity_sweep_high = last_high > prev_high and last_close < prev_high
-    liquidity_sweep_low = last_low < prev_low and last_close > prev_low
+if last_range < atr_val * 0.25 and prev_range < atr_val * 0.25:
+    return None, f"{symbol} volatilite düşük"
 
-    if last_range < atr_val * 0.25 and prev_range < atr_val * 0.25:
-        return None, f"{symbol} volatilite düşük"
+score_long = 0
+score_short = 0
 
-    score_long = 0
-    score_short = 0
+reasons_long = []
+reasons_short = []
 
-    reasons_long = []
-    reasons_short = []
+# TREND REGIME FILTER
+if adx < 18:
+    score_long -= 8
+    score_short -= 8
 
-    bb_range = (upper - lower)
-    bb_pos = (price - lower) / bb_range if bb_range != 0 else 0.5
-    atr_ratio = atr_val / price if price != 0 else 0
+bb_range = (upper - lower)
+bb_pos = (price - lower) / bb_range if bb_range != 0 else 0.5
+atr_ratio = atr_val / price if price != 0 else 0
 
-    pd_zone = premium_discount_zone(candles)
-    squeeze = atr_squeeze(candles, atr_val)
-    # ================= LONG =================
+pd_zone = premium_discount_zone(candles)
+squeeze = atr_squeeze(candles, atr_val)
+
+# ================= LONG =================
 
     if rsi_val <= 32:
         score_long += 18
@@ -933,6 +938,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
