@@ -705,9 +705,9 @@ if closes[-1] > closes[-2]:
         
 # ================= SHORT =================
 
-    if rsi_val >= 68:
-        score_short += 18
-        reasons_short.append("RSI güçlü tepe")
+if rsi_val >= 68:
+    score_short += 18
+    reasons_short.append("RSI güçlü tepe")
     elif rsi_val >= 64:
         score_short += 12
         reasons_short.append("RSI tepe bölgesi")
@@ -963,6 +963,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
