@@ -571,7 +571,7 @@ def news_block_for_symbol(symbol: str, events: list):
 def analyze_symbol(symbol: str):
     candles_1h = fetch_ohlc_tf(symbol, "1h")
 
-    closes = [c["close"] for c in candles]
+   
 
     closes_1h = [c["close"] for c in candles_1h] if candles_1h else None
     trend_1h = trend_direction(closes_1h) if closes_1h else "NEUTRAL"
@@ -585,12 +585,22 @@ def analyze_symbol(symbol: str):
     ema50 = ema(closes, 50)
 
     macd_line, signal_line, histogram = macd(closes)
-    atr_val = atr(candles, 14)
-
-    if None in [rsi_val, lower, mid, upper, ema20, ema50, macd_line, signal_line, histogram, atr_val]:
-        return None, f"{symbol} veri yetersiz"
     candles = fetch_ohlc(symbol)
 
+    if not candles or len(candles) < 50:
+    return None, f"{symbol} veri yetersiz"
+
+    closes = [c["close"] for c in candles]
+    last = candles[-1]
+    price = last["close"]
+
+    rsi_val = rsi(closes, 14)
+    lower, mid, upper = bollinger_bands(closes, 20, 2)
+    ema20 = ema(closes, 20)
+    ema50 = ema(closes, 50)
+
+    macd_line, signal_line, histogram = macd(closes)
+    atr_val = atr(candles, 14)
     if not candles or len(candles) < 50:
         return None, f"{symbol} veri yetersiz"
 # spread filtresi
@@ -961,6 +971,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
