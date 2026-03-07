@@ -95,7 +95,20 @@ def cooldown_ok(symbol: str):
     if symbol not in last_signal_times:
         return True
     return datetime.now(UTC_TZ) - last_signal_times[symbol] >= timedelta(minutes=COOLDOWN_MIN)
+    
+def is_forex_closed():
+    now = datetime.now(UTC_TZ)
+    weekday = now.weekday()  # 0=Mon ... 6=Sun
 
+    # Cumartesi tamamen kapalı
+    if weekday == 5:
+        return True
+
+    # Pazar 22:00 UTC'e kadar kapalı
+    if weekday == 6 and now.hour < 22:
+        return True
+
+    return False
 
 # =========================
 # MARKET DATA
@@ -949,6 +962,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
