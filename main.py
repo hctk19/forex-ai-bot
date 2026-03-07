@@ -525,6 +525,11 @@ ema50 = ema(closes, 50)
 macd_line, signal_line, histogram = macd(closes)
 
 atr_val = atr(candles, 14)
+# spread / aşırı geniş mum filtresi
+spread = candles[-1]["high"] - candles[-1]["low"]
+
+if spread > atr_val * 2:
+    return None, f"{symbol} spread çok yüksek"
 # displacement (güçlü hareket) kontrolü
 current_range = candles[-1]["high"] - candles[-1]["low"]
 
@@ -843,6 +848,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
