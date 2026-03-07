@@ -520,46 +520,44 @@ def analyze_symbol(symbol: str):
     lower, mid, upper = bollinger_bands(closes, 20, 2)
     ema20 = ema(closes, 20)
     ema50 = ema(closes, 50)
+
     macd_line, signal_line, histogram = macd(closes)
     atr_val = atr(candles, 14)
 
-macd_line, signal_line, histogram = macd(closes)
-atr_val = atr(candles, 14)
-if None in [rsi_val, lower, mid, upper, ema20, ema50, macd_line, signal_line, histogram, atr_val]:
+    if None in [rsi_val, lower, mid, upper, ema20, ema50, macd_line, signal_line, histogram, atr_val]:
         return None, f"{symbol} veri yetersiz"
-# spread / aşırı geniş mum filtresi
-spread = candles[-1]["high"] - candles[-1]["low"]
 
-if spread > atr_val * 2:
-    return None, f"{symbol} spread çok yüksek"
-# displacement (güçlü hareket) kontrolü
-current_range = candles[-1]["high"] - candles[-1]["low"]
+    # spread filtresi
+    spread = candles[-1]["high"] - candles[-1]["low"]
 
-strong_move = current_range > atr_val * 0.8
+    if spread > atr_val * 2:
+        return None, f"{symbol} spread çok yüksek"
 
-# candle range kontrolü
-last_range = candles[-1]["high"] - candles[-1]["low"]
-prev_range = candles[-2]["high"] - candles[-2]["low"]
-# Liquidity Sweep / False Breakout kontrolü
-prev_high = candles[-2]["high"]
-prev_low = candles[-2]["low"]
+    # displacement kontrolü
+    current_range = candles[-1]["high"] - candles[-1]["low"]
+    strong_move = current_range > atr_val * 0.8
 
-last_high = candles[-1]["high"]
-last_low = candles[-1]["low"]
-last_close = candles[-1]["close"]
+    # candle range kontrolü
+    last_range = candles[-1]["high"] - candles[-1]["low"]
+    prev_range = candles[-2]["high"] - candles[-2]["low"]
 
-# üst likidite sweep (false breakout yukarı)
-liquidity_sweep_high = last_high > prev_high and last_close < prev_high
+    # Liquidity Sweep
+    prev_high = candles[-2]["high"]
+    prev_low = candles[-2]["low"]
 
-# alt likidite sweep (false breakout aşağı)
-liquidity_sweep_low = last_low < prev_low and last_close > prev_low
+    last_high = candles[-1]["high"]
+    last_low = candles[-1]["low"]
+    last_close = candles[-1]["close"]
 
-if last_range < atr_val * 0.25 and prev_range < atr_val * 0.25:
-    return None, f"{symbol} volatilite düşük"
-  
+    liquidity_sweep_high = last_high > prev_high and last_close < prev_high
+    liquidity_sweep_low = last_low < prev_low and last_close > prev_low
+
+    if last_range < atr_val * 0.25 and prev_range < atr_val * 0.25:
+        return None, f"{symbol} volatilite düşük"
 
     score_long = 0
     score_short = 0
+
     reasons_long = []
     reasons_short = []
 
@@ -567,7 +565,8 @@ if last_range < atr_val * 0.25 and prev_range < atr_val * 0.25:
     bb_pos = (price - lower) / bb_range if bb_range != 0 else 0.5
     atr_ratio = atr_val / price if price != 0 else 0
 
-    # LONG
+    # ================= LONG =================
+
     if rsi_val <= 32:
         score_long += 18
         reasons_long.append("RSI güçlü dip")
@@ -593,6 +592,7 @@ if last_range < atr_val * 0.25 and prev_range < atr_val * 0.25:
     if atr_ratio >= 0.0025:
         score_long += 10
         reasons_long.append("Volatilite yeterli")
+
     if atr_ratio >= 0.0040:
         score_long += 5
         reasons_long.append("Volatilite güçlü")
@@ -605,15 +605,16 @@ if last_range < atr_val * 0.25 and prev_range < atr_val * 0.25:
         score_long += 18
         reasons_long.append("Likidite sweep long")
 
-if displacement_bullish(candles):
-    score_long += 16
-    reasons_long.append("Bullish displacement")
-    
-if trend_1h == "UP":
-    score_long += 10
-    reasons_long.append("1H trend yukarı")
+    if displacement_bullish(candles):
+        score_long += 16
+        reasons_long.append("Bullish displacement")
 
-    # SHORT
+    if trend_1h == "UP":
+        score_long += 10
+        reasons_long.append("1H trend yukarı")
+
+    # ================= SHORT =================
+
     if rsi_val >= 68:
         score_short += 18
         reasons_short.append("RSI güçlü tepe")
@@ -639,6 +640,7 @@ if trend_1h == "UP":
     if atr_ratio >= 0.0025:
         score_short += 10
         reasons_short.append("Volatilite yeterli")
+
     if atr_ratio >= 0.0040:
         score_short += 5
         reasons_short.append("Volatilite güçlü")
@@ -651,13 +653,13 @@ if trend_1h == "UP":
         score_short += 18
         reasons_short.append("Likidite sweep short")
 
-if displacement_bearish(candles):
-    score_short += 16
-    reasons_short.append("Bearish displacement")
+    if displacement_bearish(candles):
+        score_short += 16
+        reasons_short.append("Bearish displacement")
 
-if trend_1h == "DOWN":
-    score_short += 10
-    reasons_short.append("1H trend aşağı")
+    if trend_1h == "DOWN":
+        score_short += 10
+        reasons_short.append("1H trend aşağı")
 
     direction = None
     score = 0
@@ -667,10 +669,12 @@ if trend_1h == "DOWN":
         direction = "BUY"
         score = score_long
         reasons = reasons_long
+
     elif score_short >= SCORE_THRESHOLD and score_short > score_long:
         direction = "SELL"
         score = score_short
         reasons = reasons_short
+
     else:
         debug = (
             f"{symbol} setup yok | "
@@ -700,8 +704,6 @@ if trend_1h == "DOWN":
     }
 
     return signal, f"{symbol} sinyal bulundu | {direction} | skor={score}"
-
-
 def build_message(signal: dict):
     reasons = ", ".join(signal["reasons"][:5])
     return (
@@ -840,6 +842,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
