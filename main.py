@@ -517,14 +517,21 @@ def analyze_symbol(symbol: str):
     price = last["close"]
 
     rsi_val = rsi(closes, 14)
-    lower, mid, upper = bollinger_bands(closes, 20, 2)
-    ema20 = ema(closes, 20)
-    ema50 = ema(closes, 50)
-    macd_line, signal_line, histogram = macd(closes)
-    atr_val = atr(candles, 14)
+lower, mid, upper = bollinger_bands(closes, 20, 2)
+ema20 = ema(closes, 20)
+ema50 = ema(closes, 50)
+macd_line, signal_line, histogram = macd(closes)
+
+atr_val = atr(candles, 14)
+
+# candle range kontrolü
 last_range = candles[-1]["high"] - candles[-1]["low"]
 prev_range = candles[-2]["high"] - candles[-2]["low"]
 
+# son iki mum da küçükse işlem arama
+if last_range < atr_val * 0.25 and prev_range < atr_val * 0.25:
+    return None, f"{symbol} volatilite düşük (mumlar küçük)"
+    
 # son iki mum da küçükse setup iptal
 if last_range < atr_val * 0.25 and prev_range < atr_val * 0.25:
     return None, f"{symbol} volatilite düşük (mumlar küçük)"
@@ -817,6 +824,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
