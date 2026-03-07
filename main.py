@@ -648,58 +648,72 @@ if rsi_val <= 32:
 elif rsi_val <= 36:
     score_long += 12
 
+
 if price <= lower * 1.003:
     score_long += 12
-
 elif bb_pos <= 0.20:
     score_long += 8
     reasons_long.append("Band altına yakın")
+
 
 if ema20 > ema50:
     score_long += 8
     reasons_long.append("EMA trend yukarı")
 
+
 if histogram is not None and histogram > 0:
     score_long += 6
     reasons_long.append("MACD pozitif")
+
 
 if atr_ratio >= 0.0025:
     score_long += 10
     reasons_long.append("Volatilite yeterli")
 
+
 if atr_ratio >= 0.0040:
     score_long += 5
     reasons_long.append("Volatilite güçlü")
+
 
 if closes[-1] > closes[-2]:
     score_long += 4
     reasons_long.append("Son mum toparlanıyor")
 
-    if liquidity_sweep_long(candles):
-        score_long += 18
-        reasons_long.append("Likidite sweep long")
 
-    if false_breakout_bearish(candles):
-        score_long += 10
-        reasons_long.append("Fake breakout aşağı")
+if liquidity_sweep_long(candles):
+    score_long += 18
+    reasons_long.append("Likidite sweep long")
 
-    if volatility_expansion(candles, atr_val):
-        score_long += 8
-        reasons_long.append("Volatilite patlaması")
-    if squeeze:
-        score_long += 6
-        reasons_long.append("ATR squeeze breakout")
-    if displacement_bullish(candles):
-        score_long += 16
-        reasons_long.append("Bullish displacement")
-        
-    if pd_zone == "DISCOUNT":
-        score_long += 12
-        reasons_long.append("Discount zone")
-        
-    if trend_1h == "UP":
-        score_long += 10
-        reasons_long.append("1H trend yukarı")
+
+if false_breakout_bearish(candles):
+    score_long += 10
+    reasons_long.append("Fake breakout aşağı")
+
+
+if volatility_expansion(candles, atr_val):
+    score_long += 8
+    reasons_long.append("Volatilite patlaması")
+
+
+if squeeze:
+    score_long += 6
+    reasons_long.append("ATR squeeze breakout")
+
+
+if displacement_bullish(candles):
+    score_long += 16
+    reasons_long.append("Bullish displacement")
+
+
+if pd_zone == "DISCOUNT":
+    score_long += 12
+    reasons_long.append("Discount zone")
+
+
+if trend_1h == "UP":
+    score_long += 10
+    reasons_long.append("1H trend yukarı")
         
 # ================= SHORT =================
 
@@ -985,6 +999,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
