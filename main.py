@@ -527,6 +527,19 @@ atr_val = atr(candles, 14)
 # candle range kontrolü
 last_range = candles[-1]["high"] - candles[-1]["low"]
 prev_range = candles[-2]["high"] - candles[-2]["low"]
+# Liquidity Sweep / False Breakout kontrolü
+prev_high = candles[-2]["high"]
+prev_low = candles[-2]["low"]
+
+last_high = candles[-1]["high"]
+last_low = candles[-1]["low"]
+last_close = candles[-1]["close"]
+
+# üst likidite sweep (false breakout yukarı)
+liquidity_sweep_high = last_high > prev_high and last_close < prev_high
+
+# alt likidite sweep (false breakout aşağı)
+liquidity_sweep_low = last_low < prev_low and last_close > prev_low
 
 # son iki mum da küçükse işlem arama
 if last_range < atr_val * 0.25 and prev_range < atr_val * 0.25:
@@ -824,6 +837,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
