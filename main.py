@@ -902,11 +902,24 @@ def run_scan():
         return
 
     log("Tarama başladı.")
-    if is_forex_closed():
+
+global forex_was_closed
+
+if is_forex_closed():
+
+    if not forex_was_closed:
         log("Forex piyasası kapalı.")
-        send_telegram("ℹ️ Forex piyasası hafta sonu kapalı. Bot çalışıyor.")
-    events = fetch_economic_calendar()
-    candidates = []
+        send_telegram("🔴 Forex piyasası kapalı (hafta sonu). Bot çalışıyor.")
+        forex_was_closed = True
+
+else:
+
+    if forex_was_closed:
+        send_telegram("🟢 Forex piyasası açıldı. Bot taramaya başladı.")
+        forex_was_closed = False
+
+events = fetch_economic_calendar()
+candidates = []
 
     for symbol in SYMBOLS:
         try:
@@ -962,6 +975,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
