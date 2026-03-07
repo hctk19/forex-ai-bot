@@ -626,20 +626,37 @@ def fetch_forex_news():
         events = []
 
         for event in data:
-            title = str(event.get("Event", "")).lower()
 
-            if any(word in title for word in [
+            title = str(event.get("Event", "")).lower()
+            importance = str(event.get("Importance", "")).lower()
+            country = str(event.get("Country", "")).upper()
+            date = event.get("Date")
+
+            if not date:
+                continue
+
+            try:
+                ev_time = datetime.fromisoformat(date.replace("Z", "+00:00"))
+            except:
+                continue
+
+            if "high" in importance or any(word in title for word in [
                 "interest rate",
                 "cpi",
                 "inflation",
                 "non farm",
                 "fomc",
                 "fed",
-                "powell"
+                "powell",
+                "gdp",
+                "ppi",
+                "employment"
             ]):
+
                 events.append({
-                    "title": event.get("Event"),
-                    "time": event.get("Date")
+                    "title": title,
+                    "country": country,
+                    "time": ev_time
                 })
 
         return events
@@ -657,7 +674,7 @@ def run_scan():
         return
 
     log("Tarama başladı.")
-    events = fetch_economic_calendar()
+    events = fetch_forex_news()
     candidates = []
 
     for symbol in SYMBOLS:
@@ -714,6 +731,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
