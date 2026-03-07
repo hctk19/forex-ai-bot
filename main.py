@@ -582,15 +582,17 @@ def analyze_symbol(symbol: str):
 
     closes_1h = [c["close"] for c in candles_1h] if candles_1h else None
     trend_1h = trend_direction(closes_1h) if closes_1h else "NEUTRAL"
+
     closes = [c["close"] for c in candles]
     last = candles[-1]
     price = last["close"]
 
-
     macd_line, signal_line, histogram = macd(closes)
     atr_val = atr(candles, 14)
-    if not candles or len(candles) < 50:
-        return None, f"{symbol} veri yetersiz"
+
+    # ATR güvenlik kontrolü
+    if atr_val is None:
+        return None, f"{symbol} ATR hesaplanamadı"
 # spread filtresi
     spread = candles[-1]["high"] - candles[-1]["low"]
 
@@ -956,6 +958,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
