@@ -903,8 +903,8 @@ def run_scan():
 
     log("Tarama başladı.")
     if is_forex_closed():
-    log("Forex piyasası kapalı.")
-    send_telegram("ℹ️ Forex piyasası kapalı (hafta sonu). Bot çalışıyor ama yalnızca kriptoyu izliyorum.")
+        log("Forex piyasası kapalı.")
+        send_telegram("ℹ️ Forex piyasası hafta sonu kapalı. Bot çalışıyor.")
     events = fetch_economic_calendar()
     candidates = []
 
@@ -962,6 +962,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
