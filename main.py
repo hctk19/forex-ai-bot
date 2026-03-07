@@ -289,7 +289,25 @@ def trend_direction(closes):
         return "DOWN"
     else:
         return "NEUTRAL"
+def premium_discount_zone(candles, lookback=50):
 
+    if len(candles) < lookback:
+        return None
+
+    highs = [c["high"] for c in candles[-lookback:]]
+    lows = [c["low"] for c in candles[-lookback:]]
+
+    range_high = max(highs)
+    range_low = min(lows)
+
+    equilibrium = (range_high + range_low) / 2
+
+    price = candles[-1]["close"]
+
+    if price < equilibrium:
+        return "DISCOUNT"
+    else:
+        return "PREMIUM"
 # =========================
 # PRICE ACTION FILTERS
 # =========================
@@ -890,6 +908,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
