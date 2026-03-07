@@ -386,8 +386,7 @@ def volatility_expansion(candles, atr_val):
     if len(candles) < 2:
         return False
 
-    last_range = candles[-1]["high"] - candles[-1]["low"]
-    prev_range = candles[-2]["high"] - candles[-2]["low"]
+
 
     return last_range > prev_range * 1.5 and last_range > atr_val * 0.8
 
@@ -606,7 +605,7 @@ def analyze_symbol(symbol: str):
 # spread filtresi
     spread = candles[-1]["high"] - candles[-1]["low"]
 
-    if spread > atr_val * 2:
+    if atr_val and spread > atr_val * 2:
         return None, f"{symbol} spread çok yüksek"
 
     # displacement kontrolü
@@ -653,16 +652,12 @@ squeeze = atr_squeeze(candles, atr_val)
 
 if rsi_val <= 32:
     score_long += 18
-    reasons_long.append("RSI güçlü dip")
-
 elif rsi_val <= 36:
     score_long += 12
-    reasons_long.append("RSI dip bölgesi")
 
-    if price <= lower * 1.003:
-        score_long += 12
-        reasons_long.append("Alt Bollinger teması")
-    elif bb_pos <= 0.20:
+if price <= lower * 1.003:
+    score_long += 12
+elif bb_pos <= 0.20:
         score_long += 8
         reasons_long.append("Band altına yakın")
 
@@ -711,7 +706,8 @@ elif rsi_val <= 36:
     if trend_1h == "UP":
         score_long += 10
         reasons_long.append("1H trend yukarı")
-    # ================= SHORT =================
+        
+# ================= SHORT =================
 
     if rsi_val >= 68:
         score_short += 18
@@ -971,6 +967,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
