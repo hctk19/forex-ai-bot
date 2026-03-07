@@ -157,7 +157,7 @@ def fetch_ohlc(symbol: str, interval="15min", outputsize=120):
 
     except Exception as e:
         log(f"{symbol} veri alınamadı: {e}")
-        return []
+    
     return candles
 def fetch_ohlc_tf(symbol: str, interval="1h", outputsize=120):
     url = "https://api.twelvedata.com/time_series"
@@ -971,6 +971,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
