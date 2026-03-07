@@ -612,9 +612,10 @@ def analyze_symbol(symbol: str):
     reasons_long = []
     reasons_short = []
 
-    bb_range = (upper - lower)
-    bb_pos = (price - lower) / bb_range if bb_range != 0 else 0.5
-    atr_ratio = atr_val / price if price != 0 else 0
+bb_range = (upper - lower)
+bb_pos = (price - lower) / bb_range if bb_range != 0 else 0.5
+atr_ratio = atr_val / price if price != 0 else 0
+
 pd_zone = premium_discount_zone(candles)
     # ================= LONG =================
 
@@ -908,6 +909,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
