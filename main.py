@@ -621,8 +621,6 @@ def analyze_symbol(symbol: str):
     last_low = candles[-1]["low"]
     last_close = candles[-1]["close"]
 
-liquidity_sweep_high = last_high > prev_high and last_close < prev_high
-liquidity_sweep_low = last_low < prev_low and last_close > prev_low
 
 if last_range < atr_val * 0.25 and prev_range < atr_val * 0.25:
     return None, f"{symbol} volatilite düşük"
@@ -987,6 +985,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
