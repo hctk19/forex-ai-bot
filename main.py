@@ -36,7 +36,7 @@ UTC_TZ = ZoneInfo("UTC")
 last_signal_times = {}
 signals_sent_today = 0
 signals_day = None
-
+forex_was_closed = False
 
 # =========================
 # HELPERS
@@ -962,6 +962,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
