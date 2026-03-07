@@ -607,7 +607,7 @@ if last_range < atr_val * 0.25 and prev_range < atr_val * 0.25:
 if displacement_bullish(candles):
     score_long += 16
     reasons_long.append("Bullish displacement")
-
+    
 if trend_1h == "UP":
     score_long += 10
     reasons_long.append("1H trend yukarı")
@@ -839,6 +839,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
