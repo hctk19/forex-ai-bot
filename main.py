@@ -520,6 +520,15 @@ def analyze_symbol(symbol: str):
 lower, mid, upper = bollinger_bands(closes, 20, 2)
 ema20 = ema(closes, 20)
 ema50 = ema(closes, 50)
+# HTF (1H) trend kontrolü
+htf_candles = fetch_ohlc(symbol, "1h")
+htf_closes = [c["close"] for c in htf_candles]
+
+htf_ema20 = ema(htf_closes, 20)
+htf_ema50 = ema(htf_closes, 50)
+
+htf_bullish = htf_ema20 > htf_ema50
+htf_bearish = htf_ema20 < htf_ema50
 macd_line, signal_line, histogram = macd(closes)
 
 atr_val = atr(candles, 14)
@@ -841,6 +850,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
