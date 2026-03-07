@@ -500,13 +500,21 @@ def news_block_for_symbol(symbol: str, events: list):
 # ANALYSIS
 # =========================
 def analyze_symbol(symbol: str):
+
     candles = fetch_ohlc(symbol)
+
+    if not candles or len(candles) < 50:
+        return None, f"{symbol} veri yetersiz"
+
     candles_1h = fetch_ohlc_tf(symbol, "1h")
+
     closes = [c["close"] for c in candles]
+
+    closes_1h = [c["close"] for c in candles_1h] if candles_1h else None
+    trend_1h = trend_direction(closes_1h) if closes_1h else "NEUTRAL"
+
     last = candles[-1]
     price = last["close"]
-closes_1h = [c["close"] for c in candles_1h] if candles_1h else None
-trend_1h = trend_direction(closes_1h) if closes_1h else "NEUTRAL"
 
     rsi_val = rsi(closes, 14)
     lower, mid, upper = bollinger_bands(closes, 20, 2)
@@ -798,6 +806,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
