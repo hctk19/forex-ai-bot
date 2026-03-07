@@ -668,7 +668,10 @@ pd_zone = premium_discount_zone(candles)
     if displacement_bullish(candles):
         score_long += 16
         reasons_long.append("Bullish displacement")
-
+    if pd_zone == "DISCOUNT":
+    score_long += 12
+    reasons_long.append("Discount zone")
+        
     if trend_1h == "UP":
         score_long += 10
         reasons_long.append("1H trend yukarı")
@@ -723,7 +726,11 @@ pd_zone = premium_discount_zone(candles)
     if displacement_bearish(candles):
         score_short += 16
         reasons_short.append("Bearish displacement")
-
+        
+    if pd_zone == "PREMIUM":
+    score_short += 12
+    reasons_short.append("Premium zone")
+        
     if trend_1h == "DOWN":
         score_short += 10
         reasons_short.append("1H trend aşağı")
@@ -909,6 +916,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
