@@ -660,22 +660,22 @@ elif bb_pos <= 0.20:
 if ema20 > ema50:
     score_long += 8
     reasons_long.append("EMA trend yukarı")
-    
-    if histogram is not None and histogram > 0:
-        score_long += 6
-        reasons_long.append("MACD pozitif")
 
-    if atr_ratio >= 0.0025:
-        score_long += 10
-        reasons_long.append("Volatilite yeterli")
+if histogram is not None and histogram > 0:
+    score_long += 6
+    reasons_long.append("MACD pozitif")
 
-    if atr_ratio >= 0.0040:
-        score_long += 5
-        reasons_long.append("Volatilite güçlü")
+if atr_ratio >= 0.0025:
+    score_long += 10
+    reasons_long.append("Volatilite yeterli")
 
-    if closes[-1] > closes[-2]:
-        score_long += 4
-        reasons_long.append("Son mum toparlanıyor")
+if atr_ratio >= 0.0040:
+    score_long += 5
+    reasons_long.append("Volatilite güçlü")
+
+if closes[-1] > closes[-2]:
+    score_long += 4
+    reasons_long.append("Son mum toparlanıyor")
 
     if liquidity_sweep_long(candles):
         score_long += 18
@@ -963,6 +963,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
