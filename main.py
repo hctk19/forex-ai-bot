@@ -386,7 +386,8 @@ def volatility_expansion(candles, atr_val):
     if len(candles) < 2:
         return False
 
-
+    last_range = candles[-1]["high"] - candles[-1]["low"]
+    prev_range = candles[-2]["high"] - candles[-2]["low"]
 
     return last_range > prev_range * 1.5 and last_range > atr_val * 0.8
 
@@ -961,6 +962,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
