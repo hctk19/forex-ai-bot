@@ -708,110 +708,136 @@ if closes[-1] > closes[-2]:
 if rsi_val >= 68:
     score_short += 18
     reasons_short.append("RSI güçlü tepe")
-    elif rsi_val >= 64:
-        score_short += 12
-        reasons_short.append("RSI tepe bölgesi")
 
-    if price >= upper * 0.997:
-        score_short += 12
-        reasons_short.append("Üst Bollinger teması")
-    elif bb_pos >= 0.80:
-        score_short += 8
-        reasons_short.append("Band üstüne yakın")
+elif rsi_val >= 64:
+    score_short += 12
+    reasons_short.append("RSI tepe bölgesi")
 
-    if ema20 < ema50:
-        score_short += 8
-        reasons_short.append("EMA trend aşağı")
 
-    if histogram is not None and histogram < 0:
-        score_short += 6
-        reasons_short.append("MACD negatif")
+if price >= upper * 0.997:
+    score_short += 12
+    reasons_short.append("Üst Bollinger teması")
 
-    if atr_ratio >= 0.0025:
-        score_short += 10
-        reasons_short.append("Volatilite yeterli")
+elif bb_pos >= 0.80:
+    score_short += 8
+    reasons_short.append("Band üstüne yakın")
 
-    if atr_ratio >= 0.0040:
-        score_short += 5
-        reasons_short.append("Volatilite güçlü")
 
-    if closes[-1] < closes[-2]:
-        score_short += 4
-        reasons_short.append("Son mum zayıf")
+if ema20 < ema50:
+    score_short += 8
+    reasons_short.append("EMA trend aşağı")
 
-    if liquidity_sweep_short(candles):
-        score_short += 18
-        reasons_short.append("Likidite sweep short")
 
-    if false_breakout_bullish(candles):
-        score_short += 10
-        reasons_short.append("Fake breakout yukarı")
+if histogram is not None and histogram < 0:
+    score_short += 6
+    reasons_short.append("MACD negatif")
 
-    if volatility_expansion(candles, atr_val):
-        score_short += 8
-        reasons_short.append("Volatilite patlaması")
 
-    if squeeze:
-        score_short += 6
-        reasons_short.append("ATR squeeze breakout")    
-        
-    if displacement_bearish(candles):
-        score_short += 16
-        reasons_short.append("Bearish displacement")
-        
-    if pd_zone == "PREMIUM":
-        score_short += 12
-        reasons_short.append("Premium zone")
-        
-    if trend_1h == "DOWN":
-        score_short += 10
-        reasons_short.append("1H trend aşağı")
+if atr_ratio >= 0.0025:
+    score_short += 10
+    reasons_short.append("Volatilite yeterli")
 
-    direction = None
-    score = 0
-    reasons = []
 
-    if score_long >= SCORE_THRESHOLD and score_long > score_short:
-        direction = "BUY"
-        score = score_long
-        reasons = reasons_long
+if atr_ratio >= 0.0040:
+    score_short += 5
+    reasons_short.append("Volatilite güçlü")
 
-    elif score_short >= SCORE_THRESHOLD and score_short > score_long:
-        direction = "SELL"
-        score = score_short
-        reasons = reasons_short
 
-    else:
-        debug = (
-            f"{symbol} setup yok | "
-            f"LONG={score_long} SHORT={score_short} "
-            f"RSI={rsi_val:.2f} ATR%={(atr_ratio * 100):.2f} "
-            f"Price={format_price(price)}"
-        )
-        return None, debug
+if closes[-1] < closes[-2]:
+    score_short += 4
+    reasons_short.append("Son mum zayıf")
 
-    if direction == "BUY":
-        sl = price - atr_val * 1.5
-        tp = price + atr_val * 3.0
-    else:
-        sl = price + atr_val * 1.5
-        tp = price - atr_val * 3.0
 
-    signal = {
-        "symbol": symbol,
-        "direction": direction,
-        "score": score,
-        "price": price,
-        "sl": sl,
-        "tp": tp,
-        "rsi": rsi_val,
-        "atr_ratio": atr_ratio,
-        "reasons": reasons,
-    }
+if liquidity_sweep_short(candles):
+    score_short += 18
+    reasons_short.append("Likidite sweep short")
 
-    return signal, f"{symbol} sinyal bulundu | {direction} | skor={score}"
+
+if false_breakout_bullish(candles):
+    score_short += 10
+    reasons_short.append("Fake breakout yukarı")
+
+
+if volatility_expansion(candles, atr_val):
+    score_short += 8
+    reasons_short.append("Volatilite patlaması")
+
+
+if squeeze:
+    score_short += 6
+    reasons_short.append("ATR squeeze breakout")
+
+
+if displacement_bearish(candles):
+    score_short += 16
+    reasons_short.append("Bearish displacement")
+
+
+if pd_zone == "PREMIUM":
+    score_short += 12
+    reasons_short.append("Premium zone")
+
+
+if trend_1h == "DOWN":
+    score_short += 10
+    reasons_short.append("1H trend aşağı")
+
+
+direction = None
+score = 0
+reasons = []
+
+
+if score_long >= SCORE_THRESHOLD and score_long > score_short:
+    direction = "BUY"
+    score = score_long
+    reasons = reasons_long
+
+
+elif score_short >= SCORE_THRESHOLD and score_short > score_long:
+    direction = "SELL"
+    score = score_short
+    reasons = reasons_short
+
+
+else:
+    debug = (
+        f"{symbol} setup yok | "
+        f"LONG={score_long} SHORT={score_short} "
+        f"RSI={rsi_val:.2f} ATR%={(atr_ratio * 100):.2f} "
+        f"Price={format_price(price)}"
+    )
+    return None, debug
+
+
+if direction == "BUY":
+    sl = price - atr_val * 1.5
+    tp = price + atr_val * 3.0
+else:
+    sl = price + atr_val * 1.5
+    tp = price - atr_val * 3.0
+
+
+signal = {
+    "symbol": symbol,
+    "direction": direction,
+    "score": score,
+    "price": price,
+    "sl": sl,
+    "tp": tp,
+    "rsi": rsi_val,
+    "atr_ratio": atr_ratio,
+    "reasons": reasons,
+}
+
+
+return signal, f"{symbol} sinyal bulundu | {direction} | skor={score}"
+
+
 def build_message(signal: dict):
+
     reasons = ", ".join(signal["reasons"][:5])
+
     return (
         f"✅ Güçlü setup\n\n"
         f"Parite: {signal['symbol']}\n"
@@ -824,8 +850,6 @@ def build_message(signal: dict):
         f"Skor: {signal['score']}\n"
         f"Neden: {reasons}"
     )
-
-
 # =========================
 # MAIN SCAN
 # =========================
@@ -963,6 +987,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
