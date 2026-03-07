@@ -146,7 +146,35 @@ def fetch_ohlc(symbol: str, interval="15min", outputsize=120):
         log(f"{symbol} veri alınamadı: {e}")
         return []
     return candles
+def fetch_ohlc_tf(symbol: str, interval="1h", outputsize=120):
+    url = "https://api.twelvedata.com/time_series"
+    params = {
+        "symbol": symbol,
+        "interval": interval,
+        "outputsize": outputsize,
+        "apikey": TWELVE_KEY,
+        "format": "JSON"
+    }
 
+    r = requests.get(url, params=params, timeout=20)
+    data = r.json()
+
+    if "values" not in data:
+        return None
+
+    values = list(reversed(data["values"]))
+
+    candles = []
+    for v in values:
+        candles.append({
+            "datetime": v["datetime"],
+            "open": float(v["open"]),
+            "high": float(v["high"]),
+            "low": float(v["low"]),
+            "close": float(v["close"]),
+        })
+
+    return candles
 
 # =========================
 # INDICATORS
@@ -473,9 +501,12 @@ def news_block_for_symbol(symbol: str, events: list):
 # =========================
 def analyze_symbol(symbol: str):
     candles = fetch_ohlc(symbol)
+    candles_1h = fetch_ohlc_tf(symbol, "1h")
     closes = [c["close"] for c in candles]
     last = candles[-1]
     price = last["close"]
+closes_1h = [c["close"] for c in candles_1h] if candles_1h else None
+trend_1h = trend_direction(closes_1h) if closes_1h else "NEUTRAL"
 
     rsi_val = rsi(closes, 14)
     lower, mid, upper = bollinger_bands(closes, 20, 2)
@@ -537,6 +568,9 @@ def analyze_symbol(symbol: str):
     if displacement_bullish(candles):
         score_long += 16
         reasons_long.append("Bullish displacement")
+        if trend_1h == "UP":
+    score_long += 10
+    reasons_long.append("1H trend yukarı")
 
     # SHORT
     if rsi_val >= 68:
@@ -579,6 +613,9 @@ def analyze_symbol(symbol: str):
     if displacement_bearish(candles):
         score_short += 16
         reasons_short.append("Bearish displacement")
+        if trend_1h == "UP":
+    score_long += 10
+    reasons_long.append("1H trend yukarı")
 
     direction = None
     score = 0
@@ -761,6 +798,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
