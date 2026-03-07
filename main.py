@@ -318,13 +318,14 @@ def displacement_bullish(candles):
     rng = candles[-1]["high"] - candles[-1]["low"]
     return rng > 0 and (body / rng) >= 0.65 and candles[-1]["close"] > candles[-1]["open"]
 
-
 def displacement_bearish(candles):
     if len(candles) < 1:
         return False
     body = abs(candles[-1]["close"] - candles[-1]["open"])
     rng = candles[-1]["high"] - candles[-1]["low"]
     return rng > 0 and (body / rng) >= 0.65 and candles[-1]["close"] < candles[-1]["open"]
+
+
 # =========================
 # SMART MONEY FILTERS
 # =========================
@@ -874,6 +875,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
