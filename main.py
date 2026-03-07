@@ -613,13 +613,13 @@ def analyze_symbol(symbol: str):
     last_range = candles[-1]["high"] - candles[-1]["low"]
     prev_range = candles[-2]["high"] - candles[-2]["low"]
 
-# Liquidity Sweep
-prev_high = candles[-2]["high"]
-prev_low = candles[-2]["low"]
+    # Liquidity Sweep
+    prev_high = candles[-2]["high"]
+    prev_low = candles[-2]["low"]
 
-last_high = candles[-1]["high"]
-last_low = candles[-1]["low"]
-last_close = candles[-1]["close"]
+    last_high = candles[-1]["high"]
+    last_low = candles[-1]["low"]
+    last_close = candles[-1]["close"]
 
 liquidity_sweep_high = last_high > prev_high and last_close < prev_high
 liquidity_sweep_low = last_low < prev_low and last_close > prev_low
@@ -962,6 +962,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
