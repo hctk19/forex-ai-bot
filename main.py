@@ -553,17 +553,8 @@ liquidity_sweep_high = last_high > prev_high and last_close < prev_high
 # alt likidite sweep (false breakout aşağı)
 liquidity_sweep_low = last_low < prev_low and last_close > prev_low
 
-# son iki mum da küçükse işlem arama
 if last_range < atr_val * 0.25 and prev_range < atr_val * 0.25:
-    return None, f"{symbol} volatilite düşük (mumlar küçük)"
-    
-# son iki mum da küçükse setup iptal
-if last_range < atr_val * 0.25 and prev_range < atr_val * 0.25:
-    return None, f"{symbol} volatilite düşük (mumlar küçük)"
-
-# mum çok küçükse işlem arama
-if last_range < atr_val * 0.25:
-    return None, f"{symbol} volatilite düşük (mum küçük)"
+    return None, f"{symbol} volatilite düşük"
   
 
     score_long = 0
@@ -848,6 +839,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
