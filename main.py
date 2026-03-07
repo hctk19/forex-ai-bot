@@ -523,8 +523,9 @@ ema50 = ema(closes, 50)
 # HTF (1H) trend kontrolü
 
 macd_line, signal_line, histogram = macd(closes)
-
 atr_val = atr(candles, 14)
+if None in [rsi_val, lower, mid, upper, ema20, ema50, macd_line, signal_line, histogram, atr_val]:
+        return None, f"{symbol} veri yetersiz"
 # spread / aşırı geniş mum filtresi
 spread = candles[-1]["high"] - candles[-1]["low"]
 
@@ -563,8 +564,7 @@ if last_range < atr_val * 0.25 and prev_range < atr_val * 0.25:
 # mum çok küçükse işlem arama
 if last_range < atr_val * 0.25:
     return None, f"{symbol} volatilite düşük (mum küçük)"
-    if None in [rsi_val, lower, mid, upper, ema20, ema50, macd_line, signal_line, histogram, atr_val]:
-        return None, f"{symbol} veri yetersiz"
+  
 
     score_long = 0
     score_short = 0
@@ -848,6 +848,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
