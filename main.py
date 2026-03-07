@@ -633,25 +633,26 @@ def analyze_symbol(symbol: str):
     if closes[-1] > closes[-2]:
         score_long += 4
         reasons_long.append("Son mum toparlanıyor")
-if liquidity_sweep_long(candles):
-    score_long += 18
-    reasons_long.append("Likidite sweep long")
 
-if false_breakout_bearish(candles):
-    score_long += 10
-    reasons_long.append("Fake breakout aşağı")
+    if liquidity_sweep_long(candles):
+        score_long += 18
+        reasons_long.append("Likidite sweep long")
 
-if volatility_expansion(candles, atr_val):
-    score_long += 8
-    reasons_long.append("Volatilite patlaması")
+    if false_breakout_bearish(candles):
+        score_long += 10
+        reasons_long.append("Fake breakout aşağı")
 
-if displacement_bullish(candles):
-    score_long += 16
-    reasons_long.append("Bullish displacement")
+    if volatility_expansion(candles, atr_val):
+        score_long += 8
+        reasons_long.append("Volatilite patlaması")
 
-if trend_1h == "UP":
-    score_long += 10
-    reasons_long.append("1H trend yukarı")
+    if displacement_bullish(candles):
+        score_long += 16
+        reasons_long.append("Bullish displacement")
+
+    if trend_1h == "UP":
+        score_long += 10
+        reasons_long.append("1H trend yukarı")
     # ================= SHORT =================
 
     if rsi_val >= 68:
@@ -889,6 +890,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
