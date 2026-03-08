@@ -24,7 +24,7 @@ SYMBOLS = [
     ).split(",") if s.strip()
 ]
 
-SCORE_THRESHOLD = int(os.getenv("SCORE_THRESHOLD", "70"))
+SCORE_THRESHOLD = int(os.getenv("SCORE_THRESHOLD", "66"))
 COOLDOWN_MIN = int(os.getenv("COOLDOWN_MIN", "180"))
 SCAN_INTERVAL_SEC = int(os.getenv("SCAN_INTERVAL_SEC", "300"))
 MAX_SIGNALS_PER_DAY = int(os.getenv("MAX_SIGNALS_PER_DAY", "5"))
@@ -982,6 +982,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
