@@ -7,6 +7,8 @@ from zoneinfo import ZoneInfo
 import requests
 import yfinance as yf
 
+from trade_logger import log_trade
+
 # =========================
 # ENV
 # =========================
@@ -958,6 +960,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
