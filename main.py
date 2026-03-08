@@ -625,13 +625,16 @@ def analyze_symbol(symbol: str):
     if last_range < atr_val * 0.25 and prev_range < atr_val * 0.25:
         return None, f"{symbol} volatilite düşük"
 
+    if upper is None or lower is None:
+        return None, f"{symbol} bollinger hesaplanamadı"
+
     score_long = 0
     score_short = 0
 
     reasons_long = []
     reasons_short = []
 
-# TREND REGIME FILTER
+    # TREND REGIME FILTER
     bb_range = (upper - lower)
     bb_pos = (price - lower) / bb_range if bb_range != 0 else 0.5
     atr_ratio = atr_val / price if price != 0 else 0
@@ -641,7 +644,7 @@ def analyze_symbol(symbol: str):
 
     pd_zone = premium_discount_zone(candles)
     squeeze = atr_squeeze(candles, atr_val)
-
+    
     # ================= LONG =================
 
     if rsi_val <= 32:
@@ -947,6 +950,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
