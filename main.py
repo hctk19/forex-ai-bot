@@ -678,6 +678,10 @@ def analyze_symbol(symbol: str):
         score_long += 4
         reasons_long.append("Son mum toparlanıyor")
 
+    if momentum_up:
+        score_long += 8
+        reasons_long.append("Momentum yukarı")
+
     if liquidity_sweep_long(candles):
         score_long += 18
         reasons_long.append("Likidite sweep long")
@@ -741,6 +745,10 @@ def analyze_symbol(symbol: str):
     if closes[-1] < closes[-2]:
         score_short += 4
         reasons_short.append("Son mum zayıf")
+
+    if momentum_down:
+        score_short += 8
+        reasons_short.append("Momentum aşağı")
 
     if liquidity_sweep_short(candles):
         score_short += 18
@@ -950,6 +958,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
