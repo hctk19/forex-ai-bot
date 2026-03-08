@@ -583,8 +583,11 @@ def analyze_symbol(symbol: str):
 
     candles_1h = fetch_ohlc_tf(symbol, "1h")
 
-    closes_1h = [c["close"] for c in candles_1h] if candles_1h else None
-    trend_1h = trend_direction(closes_1h) if closes_1h else "NEUTRAL"
+    if candles_1h and len(candles_1h) > 50:
+        closes_1h = [c["close"] for c in candles_1h]
+        trend_1h = trend_direction(closes_1h)
+    else:
+        trend_1h = "NEUTRAL"
 
     # ===== İNDİCATORLAR =====
     rsi_val = rsi(closes, 14)
@@ -962,6 +965,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
