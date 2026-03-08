@@ -116,7 +116,6 @@ def is_forex_closed():
 # MARKET DATA
 # =========================
 def fetch_ohlc(symbol: str, interval="15min", outputsize=120):
-
     try:
 
         symbol_map = {
@@ -150,7 +149,6 @@ def fetch_ohlc(symbol: str, interval="15min", outputsize=120):
         candles = []
 
         for index, row in data.iterrows():
-
             candles.append({
                 "datetime": str(index),
                 "open": float(row["Open"]),
@@ -986,6 +984,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
