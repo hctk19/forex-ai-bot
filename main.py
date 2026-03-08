@@ -636,6 +636,9 @@ def analyze_symbol(symbol: str):
     bb_pos = (price - lower) / bb_range if bb_range != 0 else 0.5
     atr_ratio = atr_val / price if price != 0 else 0
 
+    momentum_up = closes[-1] > closes[-2] and closes[-2] > closes[-3]
+    momentum_down = closes[-1] < closes[-2] and closes[-2] < closes[-3]
+
     pd_zone = premium_discount_zone(candles)
     squeeze = atr_squeeze(candles, atr_val)
 
@@ -944,6 +947,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
