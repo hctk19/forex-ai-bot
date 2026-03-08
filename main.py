@@ -953,17 +953,17 @@ def run_scan():
 
     candidates.sort(key=lambda x: x["score"], reverse=True)
 
-for signal in candidates:
-    if signals_sent_today >= MAX_SIGNALS_PER_DAY:
-        break
+    for signal in candidates:
+        if signals_sent_today >= MAX_SIGNALS_PER_DAY:
+            break
 
-    send_telegram(build_message(signal))
+        send_telegram(build_message(signal))
 
-    log_trade(signal)
+        log_trade(signal)
 
-    last_signal_times[signal["symbol"]] = datetime.now(UTC_TZ)
-    signals_sent_today += 1
-    log(f"{signal['symbol']} Telegram'a gönderildi. Günlük adet: {signals_sent_today}")
+        last_signal_times[signal["symbol"]] = datetime.now(UTC_TZ)
+        signals_sent_today += 1
+        log(f"{signal['symbol']} Telegram'a gönderildi. Günlük adet: {signals_sent_today}")
 
 # =========================
 # ENTRY
@@ -982,6 +982,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
