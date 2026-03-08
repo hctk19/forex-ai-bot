@@ -633,7 +633,7 @@ def analyze_symbol(symbol: str):
     last_close = candles[-1]["close"]
 
     # düşük volatilite filtresi
-    if last_range < atr_val * 0.25 and prev_range < atr_val * 0.25:
+    if last_range < atr_val * 0.20 and prev_range < atr_val * 0.20:
         return None, f"{symbol} volatilite düşük"
 
     if upper is None or lower is None:
@@ -988,6 +988,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
