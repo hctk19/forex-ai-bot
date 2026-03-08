@@ -143,6 +143,10 @@ def fetch_ohlc(symbol: str, interval="15min", outputsize=120):
             progress=False
         )
 
+        # ===== MULTIINDEX FIX =====
+        if hasattr(data.columns, "levels"):
+            data.columns = data.columns.get_level_values(0)
+
         candles = []
 
         for index, row in data.iterrows():
@@ -982,6 +986,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
