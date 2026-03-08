@@ -824,8 +824,25 @@ def analyze_symbol(symbol: str):
         "atr_ratio": atr_ratio,
         "reasons": reasons,
     }
-
     return signal, f"{symbol} sinyal bulundu | {direction} | skor={score}"
+
+
+def build_message(signal):
+
+    reasons = ", ".join(signal["reasons"][:5])
+
+    return (
+        f"✅ Güçlü setup\n\n"
+        f"Parite: {signal['symbol']}\n"
+        f"Yön: {signal['direction']}\n"
+        f"Entry: {format_price(signal['price'])}\n"
+        f"SL: {format_price(signal['sl'])}\n"
+        f"TP: {format_price(signal['tp'])}\n"
+        f"RSI: {signal['rsi']:.2f}\n"
+        f"ATR%: {(signal['atr_ratio'] * 100):.2f}\n"
+        f"Skor: {signal['score']}\n"
+        f"Neden: {reasons}"
+    )
 # =========================
 # MAIN SCAN
 # =========================
@@ -965,6 +982,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
