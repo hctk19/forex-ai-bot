@@ -142,7 +142,11 @@ def fetch_ohlc(symbol: str, interval="15min", outputsize=120):
             progress=False
         )
 
-        # ===== MULTIINDEX FIX =====
+        # veri güvenlik kontrolü
+        if data is None or data.empty:
+            return []
+
+        # MULTIINDEX FIX
         if hasattr(data.columns, "levels"):
             data.columns = data.columns.get_level_values(0)
 
@@ -984,6 +988,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
