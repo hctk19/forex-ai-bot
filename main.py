@@ -20,7 +20,7 @@ FMP_API_KEY = os.getenv("FMP_API_KEY", "").strip()
 SYMBOLS = [
     s.strip() for s in os.getenv(
         "SYMBOLS",
-        "XAU/USD,XAG/USD,EUR/USD,GBP/USD,USD/JPY,USD/CHF,USD/CAD,AUD/USD,NZD/USD,EUR/JPY,GBP/JPY,BTC/USD,ETH/USD"
+        "XAU/USD,XAG/USD,USOIL,UKOIL,EUR/USD,GBP/USD,USD/JPY,USD/CAD,AUD/USD,NZD/USD,EUR/JPY,GBP/JPY,EUR/GBP,AUD/JPY,NZD/JPY,BTC/USD,ETH/USD,NAS100,US30,SPX"
     ).split(",") if s.strip()
 ]
 
@@ -982,6 +982,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
