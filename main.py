@@ -9,6 +9,18 @@ import yfinance as yf
 
 from trade_logger import log_trade
 
+import csv
+
+
+def log_trade_result(symbol, result):
+    with open("trade_results.csv", "a", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow([
+            datetime.now().strftime("%Y-%m-%d %H:%M"),
+            symbol,
+            result
+        ])
+
 # =========================
 # ENV
 # =========================
@@ -988,6 +1000,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
