@@ -983,6 +983,44 @@ def run_scan():
         signals_sent_today += 1
         log(f"{signal['symbol']} Telegram'a gönderildi. Günlük adet: {signals_sent_today}")
 
+def check_trade_results():
+
+    import csv
+
+    if not os.path.isfile("trade_log.csv"):
+        return
+
+    with open("trade_log.csv") as f:
+        rows = list(csv.reader(f))
+
+    for row in rows[1:]:
+
+        symbol = row[1]
+        direction = row[2]
+        tp = float(row[4])
+        sl = float(row[5])
+        result = row[-1]
+
+        if result != "OPEN":
+            continue
+
+        price = fetch_price(symbol)
+
+        if direction == "BUY":
+
+            if price >= tp:
+                update_trade_result(symbol, "TP")
+
+            elif price <= sl:
+                update_trade_result(symbol, "SL")
+
+        elif direction == "SELL":
+
+            if price <= tp:
+                update_trade_result(symbol, "TP")
+
+            elif price >= sl:
+                update_trade_result(symbol, "SL")
 # =========================
 # ENTRY
 # =========================
@@ -994,6 +1032,7 @@ if __name__ == "__main__":
     while True:
         try:
             run_scan()
+            check_trade_results()
         except Exception as e:
             log(f"Ana döngü hatası: {e}")
             log(traceback.format_exc())
