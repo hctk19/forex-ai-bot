@@ -603,6 +603,8 @@ def analyze_symbol(symbol: str):
 
     price = last["close"]
 
+    candles_1h = fetch_ohlc_tf(symbol)
+
     if candles_1h and len(candles_1h) > 50:
         closes_1h = [c["close"] for c in candles_1h]
         trend_1h = trend_direction(closes_1h)
@@ -1079,6 +1081,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
