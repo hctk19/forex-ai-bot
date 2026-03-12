@@ -1003,6 +1003,20 @@ def run_scan():
 
         send_telegram(build_message(signal))
 
+        news_comment = analyze_news(signal["symbol"])
+        risk_score, confidence = calculate_risk(signal)
+
+        extra = f"""
+📰 Haber Yorumu
+{news_comment}
+
+⚠️ Risk Skoru: {risk_score}/10
+
+🎯 Güven Puanı: {confidence}%
+"""
+
+        send_telegram(extra)
+
         log_trade(signal)
 
         last_signal_times[signal["symbol"]] = datetime.now(UTC_TZ)
@@ -1065,6 +1079,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
