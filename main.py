@@ -623,7 +623,7 @@ def analyze_symbol(symbol: str):
     if atr_val is None:
         return None, f"{symbol} ATR hesaplanamadı"
 # spread filtresi
-    spread = candles[-1]["high"] - candles[-1]["low"]
+    spread = last["high"] - last["low"]
 
     if atr_val and spread > atr_val * 2:
         return None, f"{symbol} spread çok yüksek"
@@ -1079,6 +1079,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
