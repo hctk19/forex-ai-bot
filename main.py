@@ -825,31 +825,32 @@ def analyze_symbol(symbol: str):
             f"Price={format_price(price)}"
         )
         return None, debug
-# =========================
-# CANDLE MANIPULATION FILTER
-# =========================
 
-open_p = last["open"]
-close_p = last["close"]
-high_p = last["high"]
-low_p = last["low"]
+    # =========================
+    # CANDLE MANIPULATION FILTER
+    # =========================
 
-body = abs(close_p - open_p)
-range_candle = high_p - low_p
+    open_p = last["open"]
+    close_p = last["close"]
+    high_p = last["high"]
+    low_p = last["low"]
 
-if range_candle == 0:
-    return None, f"{symbol} candle range sıfır"
+    body = abs(close_p - open_p)
+    range_candle = high_p - low_p
 
-wick = range_candle - body
+    if range_candle == 0:
+        return None, f"{symbol} candle range sıfır"
 
-if wick > body * 1.5:
-    return None, f"{symbol} wick manipulation"
+    wick = range_candle - body
 
-candle_strength = body / range_candle
+    if wick > body * 1.5:
+        return None, f"{symbol} wick manipulation"
 
-if candle_strength < 0.35:
-    return None, f"{symbol} weak candle"
-    
+    candle_strength = body / range_candle
+
+    if candle_strength < 0.35:
+        return None, f"{symbol} weak candle"
+
     if direction == "BUY":
         sl = price - atr_val * 1.5
         tp = price + atr_val * 3.0
@@ -868,9 +869,8 @@ if candle_strength < 0.35:
         "atr_ratio": atr_ratio,
         "reasons": reasons,
     }
+
     return signal, f"{symbol} sinyal bulundu | {direction} | skor={score}"
-
-
 def build_message(signal):
 
     reasons = ", ".join(signal["reasons"][:5])
@@ -1079,6 +1079,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
