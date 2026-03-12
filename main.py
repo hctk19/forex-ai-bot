@@ -823,7 +823,31 @@ def analyze_symbol(symbol: str):
             f"Price={format_price(price)}"
         )
         return None, debug
+# =========================
+# CANDLE MANIPULATION FILTER
+# =========================
 
+open_p = last["open"]
+close_p = last["close"]
+high_p = last["high"]
+low_p = last["low"]
+
+body = abs(close_p - open_p)
+range_candle = high_p - low_p
+
+if range_candle == 0:
+    return None, f"{symbol} candle range sıfır"
+
+wick = range_candle - body
+
+if wick > body * 1.5:
+    return None, f"{symbol} wick manipulation"
+
+candle_strength = body / range_candle
+
+if candle_strength < 0.35:
+    return None, f"{symbol} weak candle"
+    
     if direction == "BUY":
         sl = price - atr_val * 1.5
         tp = price + atr_val * 3.0
@@ -1039,6 +1063,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
