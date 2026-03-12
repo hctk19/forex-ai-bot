@@ -596,10 +596,11 @@ def analyze_symbol(symbol: str):
         return None, f"{symbol} veri yetersiz"
 
     closes = [c["close"] for c in candles]
-    last = candles[-1]
-    price = last["close"]
 
-    candles_1h = None
+    last = candles[-2]
+    prev = candles[-3]
+
+    price = last["close"]
 
     if candles_1h and len(candles_1h) > 50:
         closes_1h = [c["close"] for c in candles_1h]
@@ -1063,6 +1064,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
