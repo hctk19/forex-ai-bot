@@ -8,9 +8,10 @@ import requests
 import yfinance as yf
 
 from trade_logger import log_trade, update_trade_result
+from news_engine import analyze_news
+from risk_engine import calculate_risk
 
 import csv
-
 
 def log_trade_result(symbol, result):
     with open("trade_results.csv", "a", newline="") as f:
@@ -1064,6 +1065,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
