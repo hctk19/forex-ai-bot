@@ -1027,8 +1027,6 @@ def run_scan():
 
 def check_trade_results():
 
-    import csv
-
     if not os.path.isfile("trade_log.csv"):
         return
 
@@ -1046,84 +1044,55 @@ def check_trade_results():
         if result != "OPEN":
             continue
 
-        price = fetch_price(symbol)
+        candles = fetch_ohlc(symbol)
+
+        if not candles:
+            continue
+
+        price = candles[-1]["close"]
 
         if direction == "BUY":
 
             if price >= tp:
                 update_trade_result(symbol, "TP")
+                send_telegram(f"🎯 TP HIT\n{symbol}\nTP: {format_price(tp)}")
 
             elif price <= sl:
                 update_trade_result(symbol, "SL")
+                send_telegram(f"⛔ SL HIT\n{symbol}\nSL: {format_price(sl)}")
 
         elif direction == "SELL":
 
             if price <= tp:
                 update_trade_result(symbol, "TP")
+                send_telegram(f"🎯 TP HIT\n{symbol}\nTP: {format_price(tp)}")
 
             elif price >= sl:
                 update_trade_result(symbol, "SL")
+                send_telegram(f"⛔ SL HIT\n{symbol}\nSL: {format_price(sl)}")
+
+
 # =========================
 # ENTRY
 # =========================
 if __name__ == "__main__":
+
     validate_env()
     log("Forex Deep Analyzer PRO başlıyor.")
     send_telegram("✅ Forex Deep Analyzer PRO aktif. Güçlü setup gelirse yazacağım.")
 
     while True:
+
         try:
             run_scan()
             check_trade_results()
+
         except Exception as e:
             log(f"Ana döngü hatası: {e}")
             log(traceback.format_exc())
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
