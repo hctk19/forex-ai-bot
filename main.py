@@ -1071,7 +1071,6 @@ def check_trade_results():
                 update_trade_result(symbol, "SL")
                 send_telegram(f"⛔ SL HIT\n{symbol}\nSL: {format_price(sl)}")
 
-
 # =========================
 # ENTRY
 # =========================
@@ -1093,6 +1092,7 @@ if __name__ == "__main__":
 
         log(f"{SCAN_INTERVAL_SEC} saniye bekleniyor.")
         time.sleep(SCAN_INTERVAL_SEC)
+
 
 
 
