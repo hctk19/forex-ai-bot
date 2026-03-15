@@ -328,6 +328,25 @@ def trend_direction(closes):
         return "DOWN"
     else:
         return "NEUTRAL"
+def market_regime(candles):
+
+    if len(candles) < 60:
+        return "UNKNOWN"
+
+    closes = [c["close"] for c in candles]
+
+    ema50_val = ema(closes, 50)
+    ema200_val = ema(closes, 200)
+
+    if ema50_val is None or ema200_val is None:
+        return "UNKNOWN"
+
+    diff = abs(ema50_val - ema200_val) / ema200_val
+
+    if diff > 0.0025:
+        return "TREND"
+    else:
+        return "RANGE"
 def premium_discount_zone(candles, lookback=50):
 
     if len(candles) < lookback:
