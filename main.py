@@ -1083,6 +1083,8 @@ def run_scan():
 
         risk_score, confidence = calculate_risk(signal)
 
+        confidence = min(confidence, 100)
+
         extra = f"""
 📰 Haber Yorumu
 {news_comment}
