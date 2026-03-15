@@ -884,7 +884,13 @@ def analyze_symbol(symbol: str):
     else:
         sl = price + atr_val * 1.5
         tp = price - atr_val * 3.0
+    # ===== TP DISTANCE FILTER =====
+    tp_distance = abs(tp - price)
 
+    current_spread = last["high"] - last["low"]
+
+    if tp_distance < current_spread * 3:
+        return None, f"{symbol} TP mesafesi spread'e göre çok dar"
     signal = {
         "symbol": symbol,
         "direction": direction,
