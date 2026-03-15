@@ -982,7 +982,14 @@ def run_scan():
             send_telegram("🟢 Forex piyasası açıldı. Bot taramaya başladı.")
             forex_was_closed = False
 
+def run_scan():
+
     events = fetch_economic_calendar()
+
+    if high_impact_news_lock(events):
+        log("High impact haber nedeniyle tarama durduruldu.")
+        return
+
     candidates = []
 
     for symbol in SYMBOLS:
