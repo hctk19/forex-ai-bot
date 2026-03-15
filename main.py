@@ -1001,10 +1001,10 @@ def run_scan():
 
     events = fetch_economic_calendar()
 
-    if high_impact_news_lock(events):
-        log("High impact haber nedeniyle tarama durduruldu.")
-        return
+    if not events:
+        log("Ekonomik takvim verisi alınamadı.")
 
+    candidates = []
 
     general_news = fetch_general_market_news()
     theme_state, matched_headlines = build_market_theme_state(general_news)
