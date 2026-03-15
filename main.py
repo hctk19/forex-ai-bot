@@ -8,7 +8,12 @@ import requests
 import yfinance as yf
 
 from trade_logger import log_trade, update_trade_result
-from news_engine import analyze_news
+from news_engine import (
+    analyze_news,
+    fetch_general_market_news,
+    build_market_theme_state,
+    apply_news_bias_to_signal
+)
 from risk_engine import calculate_risk
 
 import csv
