@@ -642,6 +642,12 @@ def analyze_symbol(symbol: str):
 
     # ===== SPREAD FILTER =====
     current_spread = last["high"] - last["low"]
+
+    regime = market_regime(candles)
+
+    if regime == "UNKNOWN":
+        return None, f"{symbol} regime belirlenemedi"
+        
     spread_ratio = current_spread / price
 
     if spread_ratio > 0.0012:
@@ -861,6 +867,8 @@ def analyze_symbol(symbol: str):
     direction = None
     score = 0
     reasons = []
+    if regime == "RANGE" and abs(score_long - score_short) < 10:
+        return None, f"{symbol} range market kararsız"
 
     if score_long >= SCORE_THRESHOLD and score_long > score_short:
         direction = "BUY"
@@ -924,6 +932,7 @@ def analyze_symbol(symbol: str):
     signal = {
         "symbol": symbol,
         "direction": direction,
+        "regime": regime,
         "score": score,
         "price": price,
         "sl": sl,
