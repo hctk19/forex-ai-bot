@@ -972,7 +972,7 @@ def fetch_forex_news():
     except Exception as e:
         log(f"Haber alınamadı: {e}")
         return []
-def run_scan():
+def market_status_check():
     global signals_sent_today
     global forex_was_closed
 
@@ -1133,6 +1133,7 @@ if __name__ == "__main__":
     while True:
 
         try:
+            market_status_check()
             run_scan()
             check_trade_results()
 
