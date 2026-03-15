@@ -995,6 +995,13 @@ def run_scan():
         log("High impact haber nedeniyle tarama durduruldu.")
         return
 
+
+    general_news = fetch_general_market_news()
+    theme_state, matched_headlines = build_market_theme_state(general_news)
+
+    log(f"Genel haber sayısı: {len(general_news)}")
+    log(f"Theme state: {theme_state}")
+
     candidates = []
 
     for symbol in SYMBOLS:
