@@ -966,6 +966,7 @@ def build_message(signal):
         f"TP: {format_price(signal['tp'])}\n"
         f"RSI: {signal['rsi']:.2f}\n"
         f"ATR%: {(signal['atr_ratio'] * 100):.2f}\n"
+        f"Market: {signal.get('regime','?')}\n"
         f"Skor: {score_display}\n"
         f"Neden: {reasons}"
         f"{extra_news}"
