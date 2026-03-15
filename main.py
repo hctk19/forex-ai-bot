@@ -347,6 +347,33 @@ def market_regime(candles):
         return "TREND"
     else:
         return "RANGE"
+def liquidity_sweep(candles):
+
+    if len(candles) < 5:
+        return False
+
+    last = candles[-1]
+    prev_high = max(c["high"] for c in candles[-5:-1])
+    prev_low = min(c["low"] for c in candles[-5:-1])
+
+    if last["high"] > prev_high or last["low"] < prev_low:
+        return True
+
+    return False
+
+
+def displacement_candle(candle):
+
+    body = abs(candle["close"] - candle["open"])
+    full = candle["high"] - candle["low"]
+
+    if full == 0:
+        return False
+
+    body_ratio = body / full
+
+    return body_ratio > 0.65
+    
 def premium_discount_zone(candles, lookback=50):
 
     if len(candles) < lookback:
@@ -639,7 +666,12 @@ def analyze_symbol(symbol: str):
     prev = candles[-3]
 
     price = last["close"]
+    sweep = liquidity_sweep(candles)
+    displacement = displacement_candle(last)
 
+    if not sweep and not displacement:
+        return None, f"{symbol} liquidity yok"
+    
     # ===== SPREAD FILTER =====
     current_spread = last["high"] - last["low"]
 
