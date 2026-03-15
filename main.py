@@ -1040,7 +1040,11 @@ def run_scan():
 
         send_telegram(build_message(signal))
 
-        news_comment = analyze_news(signal["symbol"])
+        news_comment = analyze_news(
+            signal["symbol"],
+            theme_state,
+            matched_headlines
+        )
         risk_score, confidence = calculate_risk(signal)
 
         extra = f"""
