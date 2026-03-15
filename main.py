@@ -894,6 +894,14 @@ def analyze_symbol(symbol: str):
 def build_message(signal):
 
     reasons = ", ".join(signal["reasons"][:5])
+    news_bias = signal.get("news_bias", 0)
+    news_notes = ", ".join(signal.get("news_notes", [])[:3])
+
+    extra_news = ""
+    if news_notes:
+        extra_news = f"\nHaber Rejimi: {news_notes}\nNews Bias: {news_bias}"
+    else:
+        extra_news = f"\nNews Bias: {news_bias}"
 
     return (
         f"✅ Güçlü setup\n\n"
@@ -906,7 +914,9 @@ def build_message(signal):
         f"ATR%: {(signal['atr_ratio'] * 100):.2f}\n"
         f"Skor: {signal['score']}\n"
         f"Neden: {reasons}"
+        f"{extra_news}"
     )
+    
 # =========================
 # MAIN SCAN
 # =========================
