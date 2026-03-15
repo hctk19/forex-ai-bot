@@ -445,7 +445,7 @@ COUNTRY_TO_CCY = {
 
 def fetch_economic_calendar():
     if not FMP_API_KEY:
-        log("FMP_API_KEY yok, haber filtresi kapalı.")
+        log("FMP API key yok. Haber filtresi devre dışı.")
         return []
 
     today = datetime.now(UTC_TZ).date()
@@ -462,19 +462,32 @@ def fetch_economic_calendar():
     try:
         r = requests.get(url, params=params, timeout=20)
 
-        if r.status_code == 402:
-            log("FMP planı economic-calendar için yetkisiz. Haber filtresi devre dışı.")
+        if r.status_code in (401, 402, 403):
+            log(f"FMP yetki/plan hatası ({r.status_code}). Haber filtresi devre dışı.")
             return []
 
         r.raise_for_status()
-        data = r.json()
 
-        if isinstance(data, list):
-            return data
+        try:
+            data = r.json()
+        except Exception:
+            log(f"FMP JSON parse hatası. Cevap: {r.text[:300]}")
+            return []
 
-        log("FMP beklenmeyen veri döndürdü.")
+        if isinstance(data, dict):
+            if data.get("status") == "error" or data.get("message"):
+                log(f"FMP hata cevabı: {data}")
+                return []
+
+        if not isinstance(data, list):
+            log(f"FMP beklenmeyen veri tipi döndürdü: {type(data)}")
+            return []
+
+        return data
+
+    except requests.RequestException as e:
+        log(f"FMP request hatası: {e}")
         return []
-
     except Exception as e:
         log(f"Haber verisi alınamadı: {e}")
         return []
