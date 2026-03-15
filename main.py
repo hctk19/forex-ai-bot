@@ -621,6 +621,13 @@ def analyze_symbol(symbol: str):
 
     price = last["close"]
 
+    # ===== SPREAD FILTER =====
+    current_spread = last["high"] - last["low"]
+    spread_ratio = current_spread / price
+
+    if spread_ratio > 0.0012:
+        return None, f"{symbol} spread pahalı"
+
     candles_1h = fetch_ohlc_tf(symbol)
 
     if candles_1h and len(candles_1h) > 50:
