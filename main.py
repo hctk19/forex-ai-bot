@@ -645,7 +645,16 @@ def analyze_symbol(symbol: str):
     # ===== MACD ve ATR =====
     macd_line, signal_line, histogram = macd(closes)
     atr_val = atr(candles, 14)
+    
+    # ===== SPREAD vs ATR FILTER =====
+    current_spread = last["high"] - last["low"]
 
+    if atr_val > 0:
+        spread_atr_ratio = current_spread / atr_val
+
+        if spread_atr_ratio > 0.35:
+            return None, f"{symbol} spread ATR'e göre pahalı"
+            
     # ATR güvenlik kontrolü
     if atr_val is None:
         return None, f"{symbol} ATR hesaplanamadı"
