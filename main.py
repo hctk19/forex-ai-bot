@@ -1024,7 +1024,7 @@ def run_scan():
 
             signal, info = analyze_symbol(symbol)
             log(info)
-            time.sleep(0.1)
+            time.sleep(0.3)
 
             if signal:
 
