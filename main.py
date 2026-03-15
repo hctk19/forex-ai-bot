@@ -649,7 +649,7 @@ def analyze_symbol(symbol: str):
     # ===== SPREAD vs ATR FILTER =====
     current_spread = last["high"] - last["low"]
 
-    if atr_val > 0:
+    if atr_val and atr_val > 0:
         spread_atr_ratio = current_spread / atr_val
 
         if spread_atr_ratio > 0.35:
