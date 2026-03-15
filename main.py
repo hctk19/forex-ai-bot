@@ -1014,29 +1014,31 @@ def run_scan():
 
     candidates = []
 
-    for symbol in SYMBOLS:
+for symbol in SYMBOLS:
 
-        if news_block_for_symbol(symbol, events):
-            log(f"{symbol} takvim haberi nedeniyle atlandı")
-            continue
+    blocked, reason = news_block_for_symbol(symbol, events)
 
-        signal, info = analyze_symbol(symbol)
-        log(info)
-        time.sleep(0.1)
+    if blocked:
+        log(reason)
+        continue
 
-        if signal:
+    signal, info = analyze_symbol(symbol)
+    log(info)
+    time.sleep(0.1)
 
-            signal = apply_news_bias_to_signal(signal, theme_state)
+    if signal:
 
-            if signal["score"] >= SCORE_THRESHOLD:
-                candidates.append(signal)
+        signal = apply_news_bias_to_signal(signal, theme_state)
 
-            else:
-                log(
-                    f"{symbol} haber bias sonrası elendi | "
-                    f"skor={signal['score']} | "
-                    f"news_bias={signal.get('news_bias', 0)}"
-                )
+        if signal["score"] >= SCORE_THRESHOLD:
+            candidates.append(signal)
+
+        else:
+            log(
+                f"{symbol} haber bias sonrası elendi | "
+                f"skor={signal['score']} | "
+                f"news_bias={signal.get('news_bias', 0)}"
+            )
 
         except Exception as e:
             log(f"{symbol} analiz hatası: {e}")
