@@ -1005,25 +1005,28 @@ def run_scan():
     candidates = []
 
     for symbol in SYMBOLS:
-        try:
-            if signals_sent_today >= MAX_SIGNALS_PER_DAY:
-                break
 
-            if not cooldown_ok(symbol):
-                log(f"{symbol} cooldown aktif, geçildi.")
-                continue
+        if news_block_for_symbol(symbol, events):
+            log(f"{symbol} takvim haberi nedeniyle atlandı")
+            continue
 
-            blocked, reason = news_block_for_symbol(symbol, events)
-            if blocked:
-                log(reason)
-                continue
+        signal, info = analyze_symbol(symbol)
+        log(info)
+        time.sleep(0.1)
 
-            signal, info = analyze_symbol(symbol)
-            log(info)
-            time.sleep(0.1)
+        if signal:
 
-            if signal:
+            signal = apply_news_bias_to_signal(signal, theme_state)
+
+            if signal["score"] >= SCORE_THRESHOLD:
                 candidates.append(signal)
+
+            else:
+                log(
+                    f"{symbol} haber bias sonrası elendi | "
+                    f"skor={signal['score']} | "
+                    f"news_bias={signal.get('news_bias', 0)}"
+                )
 
         except Exception as e:
             log(f"{symbol} analiz hatası: {e}")
