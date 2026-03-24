@@ -669,12 +669,8 @@ def analyze_symbol(symbol: str):
     sweep = liquidity_sweep(candles)
     displacement = displacement_candle(last)
 
-    if not sweep and not displacement:
-        return None, f"{symbol} liquidity yok"
-    
     # ===== SPREAD FILTER =====
     current_spread = last["high"] - last["low"]
-
     regime = market_regime(candles)
 
     if regime == "UNKNOWN":
@@ -682,7 +678,7 @@ def analyze_symbol(symbol: str):
         
     spread_ratio = current_spread / price
 
-    if spread_ratio > 0.0012:
+    if spread_ratio > 0.0015:
         return None, f"{symbol} spread pahalı"
 
     candles_1h = fetch_ohlc_tf(symbol)
@@ -709,7 +705,7 @@ def analyze_symbol(symbol: str):
     if atr_val and atr_val > 0:
         spread_atr_ratio = current_spread / atr_val
 
-        if spread_atr_ratio > 0.35:
+        if spread_atr_ratio > 0.42:
             return None, f"{symbol} spread ATR'e göre pahalı"
             
     # ATR güvenlik kontrolü
