@@ -705,7 +705,7 @@ def analyze_symbol(symbol: str):
     if atr_val and atr_val > 0:
         spread_atr_ratio = current_spread / atr_val
 
-        if spread_atr_ratio > 0.42:
+        if spread_atr_ratio > 0.48:
             return None, f"{symbol} spread ATR'e göre pahalı"
             
     # ATR güvenlik kontrolü
