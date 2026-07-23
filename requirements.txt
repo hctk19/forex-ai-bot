@@ -4,3 +4,4 @@ numpy
 python-dotenv
 yfinance
 openai>=1.0.0
+twelvedata
