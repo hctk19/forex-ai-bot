@@ -1,23 +1,28 @@
 """
 Market Data Provider
 
-Tüm piyasa verileri bu dosya üzerinden alınır.
+Bu modül piyasa verisini sağlar.
 
-Hiçbir modül (scanner, ai, risk vs.)
-doğrudan API kullanmaz.
+Kuralları:
+- Teknik analiz yapmaz.
+- AI kullanmaz.
+- Risk hesaplamaz.
+- Telegram mesajı göndermez.
 
-Her şey MarketData sınıfı üzerinden çalışır.
+Sadece veri döndürür.
 """
 
-import yfinance as yf
+import requests
 
+from config import TWELVEDATA_API_KEY
 from symbol_mapping import get_symbol
 
 
 class MarketData:
 
-    def __init__(self, provider="yfinance"):
+    BASE_URL = "https://api.twelvedata.com"
 
+    def __init__(self, provider="twelvedata"):
         self.provider = provider
 
     ########################################################
@@ -26,100 +31,112 @@ class MarketData:
 
     def get_current_price(self, symbol):
 
-        if self.provider == "yfinance":
+        if self.provider != "twelvedata":
+            raise Exception(f"{self.provider} henüz desteklenmiyor.")
 
-            yf_symbol = get_symbol(symbol, "yfinance")
+        td_symbol = get_symbol(symbol, "twelvedata")
 
-            ticker = yf.Ticker(yf_symbol)
+        url = f"{self.BASE_URL}/price"
 
-            data = ticker.history(
-                period="1d",
-                interval="1m"
-            )
+        params = {
+            "symbol": td_symbol,
+            "apikey": TWELVEDATA_API_KEY
+        }
 
-            if data.empty:
-                return None
+        response = requests.get(url, params=params)
 
-            return float(data["Close"].iloc[-1])
+        data = response.json()
 
-        raise Exception(f"{self.provider} desteklenmiyor.")
+        if "price" not in data:
+            raise Exception(data)
+
+        return float(data["price"])
 
     ########################################################
-    # Mum verisi
+    # Mum Verileri
     ########################################################
 
     def get_candles(
         self,
         symbol,
-        interval="15m",
-        period="5d"
+        interval="15min",
+        outputsize=500
     ):
 
-        if self.provider == "yfinance":
+        if self.provider != "twelvedata":
+            raise Exception(f"{self.provider} henüz desteklenmiyor.")
 
-            yf_symbol = get_symbol(symbol, "yfinance")
+        td_symbol = get_symbol(symbol, "twelvedata")
 
-            ticker = yf.Ticker(yf_symbol)
+        url = f"{self.BASE_URL}/time_series"
 
-            data = ticker.history(
-                period=period,
-                interval=interval
-            )
+        params = {
+            "symbol": td_symbol,
+            "interval": interval,
+            "outputsize": outputsize,
+            "apikey": TWELVEDATA_API_KEY
+        }
 
-            return data
+        response = requests.get(url, params=params)
 
-        raise Exception(f"{self.provider} desteklenmiyor.")
-
-    ########################################################
-    # Hacim
-    ########################################################
-
-    def get_volume(self, symbol):
-
-        candles = self.get_candles(
-            symbol,
-            interval="1m",
-            period="1d"
-        )
-
-        if candles.empty:
-            return None
-
-        return float(candles["Volume"].iloc[-1])
+        return response.json()
 
     ########################################################
-    # Son mum
+    # Son Mum
     ########################################################
 
     def get_last_candle(self, symbol):
 
-        candles = self.get_candles(
-            symbol,
-            interval="1m",
-            period="1d"
-        )
+        candles = self.get_candles(symbol)
 
-        if candles.empty:
+        if "values" not in candles:
             return None
 
-        return candles.iloc[-1]
+        return candles["values"][0]
 
     ########################################################
-    # Son X mum
+    # Son X Mum
     ########################################################
 
     def get_last_candles(
         self,
         symbol,
-        count=200,
-        interval="15m",
-        period="60d"
+        interval="15min",
+        outputsize=200
     ):
 
         candles = self.get_candles(
             symbol,
             interval,
-            period
+            outputsize
         )
 
-        return candles.tail(count)
+        if "values" not in candles:
+            return []
+
+        return candles["values"]
+
+    ########################################################
+    # Günlük Hacim
+    ########################################################
+
+    def get_volume(self, symbol):
+
+        candle = self.get_last_candle(symbol)
+
+        if candle is None:
+            return None
+
+        return float(candle.get("volume", 0))
+
+    ########################################################
+    # Enstrüman Bilgisi
+    ########################################################
+
+    def get_symbol_info(self, symbol):
+
+        return {
+            "symbol": symbol,
+            "provider": self.provider,
+            "provider_symbol": get_symbol(symbol, self.provider)
+        }
